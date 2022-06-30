@@ -1,0 +1,8 @@
+export { default as favoriteThisBE } from "./favoriteThisBe"
+export { default as favoriteThisClassificador } from "./favoriteThisClassificador"
+export { default as getBoletimList } from "./getBoletimList"
+export { default as getClassificadorById } from "./getClassificadorById"
+export { default as getClassificadoresList } from "./getClassificadoresList"
+export { default as getFavoriteList } from "./getFavoriteList"
+export { default as getThisBoletimById } from "./getThisBoletimById"
+export { default as removeThisFavorite } from "./removeThisFavorite"

@@ -1,0 +1,6 @@
+export { default as Boletim } from "./Boletim"
+export { default as BoletimContents } from "./BoletimContents"
+export { default as Classificador } from "./Classificador"
+export { default as ClassificadorContents } from "./ClassificadorContents"
+export { default as Configuracoes } from "./Configuracoes"
+export { default as Favoritos } from "./Favoritos"
