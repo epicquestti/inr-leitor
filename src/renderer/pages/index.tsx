@@ -28,7 +28,8 @@ const Home = () => {
   const handleClose = () => {
     setOpenSnack(false)
   }
-  useEffect(() => {
+
+  const init = () => {
     try {
       setLoading(true)
       window.Main.on("refreshCarroucel", (data: any) => {
@@ -63,16 +64,19 @@ const Home = () => {
 
       window.Main.on("reloadFavoritos", (data: any) => {
         setList(data)
+        setLoading(false)
       })
 
       window.Main.on("reloadRemoveThisFavorite", (data: any) => {
         setOpenSnack(true)
         setMsg(data.msg)
         setList(data.response)
+        setLoading(false)
       })
 
-      window.Main.send("initiCarrourcel", {})
-      window.Main.send("getFavoriteList", { type: type })
+      window.Main.send("initiCarrourcel")
+      window.Main.send("getFavoriteList")
+      window.Main.send("getNotificationList")
     } catch (error: any) {
       setMsg(error.message)
       setOpenSnack(true)
@@ -81,7 +85,12 @@ const Home = () => {
         setLoading(false)
       }, 2000)
     }
+  }
+
+  useEffect(() => {
+    init()
   }, [])
+
   return (
     <View
       loading={loading}
@@ -111,8 +120,15 @@ const Home = () => {
             setType={(value: string) => {
               setType(value)
             }}
+            stopLoading={() => {
+              setLoading(false)
+            }}
             searchFavorite={() => {
-              window.Main.send("getFavoriteList", { type: type, searchText })
+              setLoading(true)
+
+              setTimeout(() => {
+                window.Main.send("getFavoriteList", { type: type, searchText })
+              }, 2000)
             }}
           />
         </Grid>

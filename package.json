@@ -1,19 +1,16 @@
 {
   "name": "inr-app",
-  "productName": "INR-Leitor",
-  "version": "1.0.0",
+  "productName": "Leitor INR",
+  "version": "0.2.62",
   "description": "Aplicativo Voltado para o cliente INR onde o mesmo pode acompanhar as publicações INR em tempo real.",
-  "main": "artifacts/main/index.js",
+  "main": "src/artifacts/index.js",
   "scripts": {
-    "start": "npm run compile:main && electron-forge start",
+    "start": "npm run compile:main && electron-forge start --inspect-electron",
     "compile:main": "tsc -p src/main",
     "compile:renderer": "next build src/renderer && next export src/renderer",
     "compile:full": "npm run compile:main && npm run compile:renderer",
-    "build": "npm run compile:full && npm run make",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "build-installer": "electron-builder"
+    "build-installer": "electron-builder",
+    "build": "npm run compile:full && npm run build-installer"
   },
   "keywords": [],
   "author": {
@@ -22,89 +19,89 @@
   },
   "license": "MIT",
   "build": {
-    "appId": "inr-app",
+    "appId": "leitor-inr",
+    "productName": "Leitor INR",
     "target": [
       "nsis"
+    ],
+    "asarUnpack": [
+      "src/assets",
+      "src/artifacts",
+      "src/renderer/out"
+    ],
+    "files": [
+      "src/assets",
+      "src/artifacts",
+      "src/renderer/out"
     ],
     "nsis": {
       "installerIcon": "src/assets/setupicon.ico",
       "uninstallerIcon": "src/assets/uninstallIcon.ico",
-      "uninstallDisplayName": "INR-Leitor",
+      "uninstallDisplayName": "Desinstalar_Leitor_INR",
       "license": "license.txt",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "artifactName": "Instalador_Leitor_INR_${version}.${ext}",
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Leitor INR"
     },
     "icon": "src/assets/icon.png",
     "copyright": "Copyright © 2022 ${author}"
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "inr_app"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
+      "packagerConfig": {
+        "icon": "src/assets/setupicon.ico",
+        "ignore": [
+          "src/renderer/.next"
+        ]
+      }
     }
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.64",
-    "@electron-forge/maker-deb": "^6.0.0-beta.64",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/cli": "6.0.0-beta.64",
+    "@electron-forge/maker-deb": "6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "6.0.0-beta.64",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
-    "@electron-forge/maker-zip": "^6.0.0-beta.64",
-    "@next/eslint-plugin-next": "^12.2.0",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5",
-    "@types/react-swipeable-views": "^0.13.1",
-    "@types/react-swipeable-views-utils": "^0.13.3",
-    "@types/sqlite3": "^3.1.8",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.30.0",
+    "@electron-forge/maker-wix": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "6.0.0-beta.64",
+    "@next/eslint-plugin-next": "12.2.0",
+    "@types/node": "18.0.0",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.5",
+    "@types/react-swipeable-views": "0.13.1",
+    "@types/react-swipeable-views-utils": "0.13.3",
+    "@types/sqlite3": "3.1.8",
+    "@typescript-eslint/eslint-plugin": "5.30.0",
+    "@typescript-eslint/parser": "5.30.0",
     "electron": "19.0.6",
-    "electron-builder": "^23.1.0",
-    "eslint": "^8.18.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.1.0",
-    "eslint-plugin-react": "^7.30.1",
-    "prettier": "^2.7.1",
-    "typescript": "~4.5.4"
+    "electron-builder": "23.1.0",
+    "eslint": "8.18.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-prettier": "4.1.0",
+    "eslint-plugin-react": "7.30.1",
+    "exe-icon-extractor": "^1.0.8",
+    "prettier": "2.7.1",
+    "typescript": "4.5.4"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.8.6",
-    "axios": "^0.27.2",
-    "electron-next": "^3.1.5",
-    "electron-squirrel-startup": "^1.0.0",
-    "next": "^12.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-swipeable-views": "^0.14.0",
-    "react-swipeable-views-utils": "^0.14.0",
-    "reflect-metadata": "^0.1.13",
-    "sqlite3": "^5.0.8",
-    "superjson": "^1.9.1",
-    "typeorm": "^0.3.7"
+    "@emotion/react": "11.9.3",
+    "@emotion/styled": "11.9.3",
+    "@mui/icons-material": "5.8.4",
+    "@mui/material": "5.8.6",
+    "axios": "0.27.2",
+    "electron-log": "^4.4.8",
+    "electron-next": "3.1.5",
+    "electron-squirrel-startup": "1.0.0",
+    "electron-updater": "^5.0.5",
+    "next": "12.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-swipeable-views": "0.14.0",
+    "react-swipeable-views-utils": "0.14.0",
+    "reflect-metadata": "0.1.13",
+    "sqlite3": "5.0.8",
+    "superjson": "1.9.1",
+    "typeorm": "0.3.7"
   }
 }

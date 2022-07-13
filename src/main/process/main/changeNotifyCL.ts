@@ -1,13 +1,17 @@
 import { IpcMainEvent } from "electron"
+import { DataSource } from "typeorm"
 import { Configuracoes } from "../../Entities"
-import { database } from "../../lib"
 export default {
   name: "changeNotifyCL",
-  handle: async (data: boolean, event?: IpcMainEvent): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    data: boolean,
+    event?: IpcMainEvent
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("event is needed.")
 
-      const configRepository = await database.getRepository(Configuracoes)
+      const configRepository = await db.getRepository(Configuracoes)
 
       await configRepository.save({
         id: 1,

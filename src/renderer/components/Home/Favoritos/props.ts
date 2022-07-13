@@ -8,4 +8,5 @@ export type favoritosProps = {
   setSearchText?: (value: string) => void
   setType?: (value: string) => void
   searchFavorite?: () => void
+  stopLoading?: () => void
 }

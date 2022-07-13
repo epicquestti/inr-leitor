@@ -1,6 +1,8 @@
-// const base = "https://homolog.publicacoesinr.com.br/api"
-const base = "https://production.publicacoesinr.com.br/api"
-
+import { app } from "electron"
+const isDev = !app.isPackaged
+const base = isDev
+  ? "http://localhost:3000/api"
+  : "https://production.publicacoesinr.com.br/api"
 export default {
   api: {
     inr: {
@@ -9,7 +11,8 @@ export default {
       boletimAfter: `${base}/publicacoes/boletim/after/`,
       boletim: `${base}/publicacoes/boletim/`,
       classificadorAfter: `${base}/publicacoes/classificador/after/`,
-      classificador: `${base}/publicacoes/classificador/`
+      classificador: `${base}/publicacoes/classificador/`,
+      version: `${base}/publicacoes/version`
     }
   }
 }

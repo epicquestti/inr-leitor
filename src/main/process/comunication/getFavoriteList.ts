@@ -1,7 +1,6 @@
 import { IpcMainEvent } from "electron"
-import { ILike } from "typeorm"
+import { DataSource, ILike } from "typeorm"
 import { Boletim, Classificador, Favoritos } from "../../Entities"
-import { database } from "../../lib"
 
 export type favoriteListResponse = {
   id?: number
@@ -18,13 +17,17 @@ type Data = {
 
 export default {
   name: "getFavoriteList",
-  handle: async (data: Data, event?: IpcMainEvent): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    data: Data,
+    event?: IpcMainEvent
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("Event is needed.")
 
       const res: favoriteListResponse[] = []
 
-      const allFavListRepository = await database.getRepository(Favoritos)
+      const allFavListRepository = await db.getRepository(Favoritos)
       const allFavListResponse = await allFavListRepository.find({
         order: {
           idFavorito: "DESC"
@@ -32,10 +35,8 @@ export default {
       })
 
       if (allFavListResponse.length > 0) {
-        const classificadorRepository = await database.getRepository(
-          Classificador
-        )
-        const boletimRepository = await database.getRepository(Boletim)
+        const classificadorRepository = await db.getRepository(Classificador)
+        const boletimRepository = await db.getRepository(Boletim)
 
         const be: number[] = []
         const cl: number[] = []
@@ -95,8 +96,6 @@ export default {
         return event.sender.send("reloadFavoritos", [])
       }
     } catch (error: any) {
-      console.log(error)
-
       event?.sender.send("reloadFavoritos", false)
     }
   }

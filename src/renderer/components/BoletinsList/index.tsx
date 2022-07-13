@@ -33,6 +33,7 @@ const BoletimList: FC<classificadoresProps> = () => {
         setCount(data.count)
         setBoletimList(data.data)
       }
+      window.Main.send("getNotificationList")
       setTimeout(() => {
         setLoading(false)
       }, 1500)

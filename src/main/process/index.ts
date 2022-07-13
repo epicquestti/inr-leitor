@@ -1,15 +1,19 @@
 export {
+  favoriteThisBE,
   favoriteThisClassificador,
+  getBoletimList,
   getClassificadorById,
   getClassificadoresList,
   getFavoriteList,
+  getNotificationList,
+  getThisBoletimById,
   removeThisFavorite
 } from "../process/comunication"
 export {
   changeNotifyBE,
   changeNotifyCL,
-  fisrtConfiguration,
-  getApplicationConfig,
+  configurationProcess,
+  getConfigurations,
   getNotifications,
   initiCarrourcel,
   verifyBoletins

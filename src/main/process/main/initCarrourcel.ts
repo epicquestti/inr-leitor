@@ -1,15 +1,15 @@
 import { IpcMainEvent } from "electron"
+import { DataSource } from "typeorm"
 import { Boletim, Classificador } from "../../Entities"
-import { database } from "../../lib"
 
 export default {
   name: "initiCarrourcel",
-  handle: async (event?: IpcMainEvent): Promise<void> => {
+  handle: async (db: DataSource, event?: IpcMainEvent): Promise<void> => {
     try {
       if (!event) throw new Error("event is needed.")
 
-      const clRepositorio = await database.getRepository(Classificador)
-      const BeRepositorio = await database.getRepository(Boletim)
+      const clRepositorio = await db.getRepository(Classificador)
+      const BeRepositorio = await db.getRepository(Boletim)
 
       const be = await BeRepositorio.find({
         select: {

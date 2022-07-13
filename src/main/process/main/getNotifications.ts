@@ -1,22 +1,28 @@
 import { IpcMainEvent } from "electron"
+import { DataSource } from "typeorm"
 import { Configuracoes } from "../../Entities"
-import { database } from "../../lib"
 export default {
   name: "getNotifications",
-  handle: async (event?: IpcMainEvent): Promise<void> => {
+  handle: async (db: DataSource, event?: IpcMainEvent): Promise<void> => {
     try {
       if (!event) throw new Error("event is needed.")
 
-      const configRepository = await database.getRepository(Configuracoes)
-      const response = await configRepository.findOne({
-        where: {
+      const configQueryBuilder = await db
+        .getRepository(Configuracoes)
+        .createQueryBuilder("configuracoes")
+      const configResult = await configQueryBuilder
+        .where("configuracoes.id = :id", {
           id: 1
-        },
-        select: ["notifyClassificador", "notifyBoletim"]
-      })
+        })
+        .select([
+          "configuracoes.notifyClassificador",
+          "configuracoes.notifyBoletim"
+        ])
+        .getOne()
+
       event.sender.send("reloadNotifies", {
         success: true,
-        contents: response
+        contents: configResult
       })
     } catch (error: any) {
       event?.sender.send("reloadNotifies", {

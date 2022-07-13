@@ -24,11 +24,10 @@ export default function ReadingBoletim() {
     try {
       setLoading(true)
       window.Main.on("realodBoletim", (data: any) => {
-        console.log(data)
-
         setTitle(data.title)
         setData(new Date(data.publicadoEm).toLocaleDateString())
         setContents(data.contents)
+        window.Main.send("getNotificationList")
         setTimeout(() => {
           setLoading(false)
         }, 1000)

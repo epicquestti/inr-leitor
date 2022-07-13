@@ -3,6 +3,7 @@ import {
   Button,
   Grid,
   IconButton,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -78,7 +79,36 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.list && props.list.length > 0 ? (
+                {props.loading ? (
+                  <TableRow
+                    sx={{
+                      height: "13.8vw"
+                    }}
+                  >
+                    <TableCell align="center" colSpan={4}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                          <Typography variant="body1">
+                            Carregando... Por favor aguarde.
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                          <Grid
+                            container
+                            spacing={3}
+                            justifyContent="center"
+                            alignContent="center"
+                            alignItems="center"
+                          >
+                            <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
+                              <LinearProgress />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                  </TableRow>
+                ) : props.list && props.list.length > 0 ? (
                   props.list.map((item: any) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.titulo}</TableCell>
@@ -118,6 +148,46 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                     </TableCell>
                   </TableRow>
                 )}
+                {/* {props.list && props.list.length > 0 ? (
+                  props.list.map((item: any) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.titulo}</TableCell>
+                      <TableCell align="center">
+                        {new Date(item.data).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          onClick={() => {
+                            if (item.type === "C")
+                              router.push(`/classificador/${item.id}`)
+                            else if (item.type === "B")
+                              router.push(`/boletim/${item.id}`)
+                          }}
+                        >
+                          <Visibility />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          onClick={() => {
+                            window.Main.send("removeThisFavorite", {
+                              id: item.id,
+                              type: item.type
+                            })
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell align="center" colSpan={4}>
+                      Clique em buscar para ver seus Favoritos
+                    </TableCell>
+                  </TableRow>
+                )} */}
               </TableBody>
             </Table>
           </TableContainer>

@@ -15,15 +15,12 @@ import { classificadoresProps } from "./props"
 
 const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
   const router = useRouter()
-
   const [loading, setLoading] = useState(true)
   const [classificadorList, setClassificadorList] = useState([])
-
   const [text, setText] = useState("")
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(5)
   const [count, setCount] = useState<number>(0)
-
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>("")
 
@@ -36,6 +33,7 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
         setCount(data.count)
         setClassificadorList(data.data)
       }
+      window.Main.send("getNotificationList")
       setTimeout(() => {
         setLoading(false)
       }, 1000)
@@ -49,15 +47,8 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
   }
 
   useEffect(() => {
-    try {
-      getProps()
-    } catch (error: any) {
-      setMsg(error.message)
-      setOpenSnack(true)
-    } finally {
-      setLoading(false)
-    }
-  }, [router.isReady])
+    getProps()
+  }, [])
 
   const makeSearch = () => {
     setLoading(true)

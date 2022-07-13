@@ -1,6 +1,6 @@
 import { IpcMainEvent } from "electron"
+import { DataSource } from "typeorm"
 import { Favoritos } from "../../Entities"
-import { database } from "../../lib"
 
 type Data = {
   id: number
@@ -8,11 +8,15 @@ type Data = {
 
 export default {
   name: "favoriteThisClassificador",
-  handle: async (event?: IpcMainEvent, data?: Data): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    event?: IpcMainEvent,
+    data?: Data
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("event is needed.")
 
-      const favoritoRepositoy = await database.getRepository(Favoritos)
+      const favoritoRepositoy = await db.getRepository(Favoritos)
       const hasFavorite = await favoritoRepositoy.findOne({
         where: {
           idFavorito: data?.id,

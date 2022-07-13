@@ -1,6 +1,6 @@
 import { IpcMainEvent } from "electron"
-import { Boletim, BoletimContents } from "../../Entities"
-import { database } from "../../lib"
+import { DataSource } from "typeorm"
+import { Boletim, BoletimContents, Notificacoes } from "../../Entities"
 
 type Data = {
   id: number
@@ -8,11 +8,15 @@ type Data = {
 
 export default {
   name: "getThisBoletimById",
-  handle: async (event?: IpcMainEvent, data?: Data): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    event?: IpcMainEvent,
+    data?: Data
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("Connection is needed.")
 
-      const beRepository = await database.getRepository(Boletim)
+      const beRepository = await db.getRepository(Boletim)
       const be = await beRepository.findOne({
         where: {
           id: data?.id
@@ -26,7 +30,7 @@ export default {
         }
       })
 
-      const beContentsRepository = await database.getRepository(BoletimContents)
+      const beContentsRepository = await db.getRepository(BoletimContents)
       const beContents = await beContentsRepository.find({
         where: {
           boletim: {
@@ -61,7 +65,22 @@ export default {
 
       await beRepository.save(be)
 
+      const notificacoesRepository = await db.getRepository(Notificacoes)
+      const notificacaoToUpdate = await notificacoesRepository.findOne({
+        where: {
+          relatedDocumentId: be.id,
+          type: "B",
+          readed: false
+        }
+      })
+
+      if (notificacaoToUpdate) {
+        notificacaoToUpdate.readed = true
+        await notificacoesRepository.save(notificacaoToUpdate)
+      }
+
       event.sender.send("realodBoletim", boletin)
+      event.sender.send("getNotificationList")
     } catch (error: any) {
       event?.sender.send("realodBoletim", false)
     }

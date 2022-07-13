@@ -1,6 +1,10 @@
 import { IpcMainEvent } from "electron"
-import { Classificador, ClassificadorContents } from "../../Entities"
-import { database } from "../../lib"
+import { DataSource } from "typeorm"
+import {
+  Classificador,
+  ClassificadorContents,
+  Notificacoes
+} from "../../Entities"
 
 type Data = {
   id: number
@@ -8,11 +12,15 @@ type Data = {
 
 export default {
   name: "getClassificadorById",
-  handle: async (event?: IpcMainEvent, data?: Data): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    event?: IpcMainEvent,
+    data?: Data
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("Connection is needed.")
 
-      const clRepository = await database.getRepository(Classificador)
+      const clRepository = await db.getRepository(Classificador)
       const cl = await clRepository.findOne({
         where: {
           id: data?.id
@@ -26,9 +34,7 @@ export default {
         }
       })
 
-      const clContentsRepository = await database.getRepository(
-        ClassificadorContents
-      )
+      const clContentsRepository = await db.getRepository(ClassificadorContents)
 
       const clContents = await clContentsRepository.find({
         where: {
@@ -61,6 +67,19 @@ export default {
       cl.read = "S"
 
       await clRepository.save(cl)
+
+      const notificacoesRepository = await db.getRepository(Notificacoes)
+      const notificacaoToUpdate = await notificacoesRepository.findOne({
+        where: {
+          relatedDocumentId: cl.id,
+          type: "C"
+        }
+      })
+
+      if (notificacaoToUpdate) {
+        notificacaoToUpdate.readed = true
+        await notificacoesRepository.save(notificacaoToUpdate)
+      }
 
       event.sender.send("relaodClassificador", classificador)
     } catch (error: any) {

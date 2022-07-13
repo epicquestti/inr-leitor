@@ -4,7 +4,7 @@ export const process = {
     ipcRenderer.send("checkDbStatus")
   },
 
-  send: (name: string, data: any) => {
+  send: (name: string, data?: any) => {
     ipcRenderer.send(name, data)
   },
 

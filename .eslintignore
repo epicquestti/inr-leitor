@@ -2,3 +2,4 @@ dist/
 out/
 artifacts/
 /.js
+node_modules/

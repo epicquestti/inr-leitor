@@ -1,7 +1,6 @@
 import { IpcMainEvent } from "electron"
-import { Like } from "typeorm"
+import { DataSource, Like } from "typeorm"
 import { Classificador } from "../../Entities"
-import { database } from "../../lib"
 
 type Data = {
   text?: string
@@ -11,7 +10,11 @@ type Data = {
 
 export default {
   name: "getClassificadoresList",
-  handle: async (event?: IpcMainEvent, data?: Data): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    event?: IpcMainEvent,
+    data?: Data
+  ): Promise<void> => {
     try {
       let searchText = ""
       let page = 0
@@ -22,9 +25,7 @@ export default {
       if (data?.page) page = data?.page
       if (data?.limit) limit = data?.limit
 
-      const classificadorRepository = await database.getRepository(
-        Classificador
-      )
+      const classificadorRepository = await db.getRepository(Classificador)
 
       const count = await classificadorRepository.count({
         where: {

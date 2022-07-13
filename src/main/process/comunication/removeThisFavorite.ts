@@ -1,7 +1,6 @@
 import { IpcMainEvent } from "electron"
-import { In } from "typeorm"
+import { DataSource, In } from "typeorm"
 import { Boletim, Classificador, Favoritos } from "../../Entities"
-import { database } from "../../lib"
 
 type Data = {
   id: number
@@ -18,11 +17,15 @@ export type favoriteListResponse = {
 
 export default {
   name: "removeThisFavorite",
-  handle: async (data: Data, event?: IpcMainEvent): Promise<void> => {
+  handle: async (
+    db: DataSource,
+    data: Data,
+    event?: IpcMainEvent
+  ): Promise<void> => {
     try {
       if (!event) throw new Error("Connection is needed.")
 
-      const favoriteRepository = await database.getRepository(Favoritos)
+      const favoriteRepository = await db.getRepository(Favoritos)
 
       await favoriteRepository.delete({
         idFavorito: data.id,
@@ -41,10 +44,8 @@ export default {
       })
 
       if (allFavListResponse.length > 0) {
-        const classificadorRepository = await database.getRepository(
-          Classificador
-        )
-        const boletimRepository = await database.getRepository(Boletim)
+        const classificadorRepository = await db.getRepository(Classificador)
+        const boletimRepository = await db.getRepository(Boletim)
 
         const be: number[] = []
         const cl: number[] = []

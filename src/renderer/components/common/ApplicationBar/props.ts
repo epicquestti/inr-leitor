@@ -5,3 +5,12 @@ export type appBarProps = {
   hasInternet: boolean
   dbIsConnected: boolean
 }
+
+export type notifications = {
+  id: number
+  createdAt: Date
+  text: string
+  type: string
+  readed: boolean
+  relatedDocumentId?: number
+}
