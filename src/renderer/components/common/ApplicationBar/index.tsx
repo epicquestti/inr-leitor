@@ -3,9 +3,12 @@ import {
   Announcement,
   Article,
   BrowserUpdated,
-  // Close,
+  BugReport,
+  Close,
   Cloud,
+  Info,
   Notifications,
+  Refresh,
   Settings,
   Storage
 } from "@mui/icons-material"
@@ -13,18 +16,25 @@ import {
   AppBar,
   Badge,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Menu,
   MenuItem,
   styled,
   Toolbar,
+  Tooltip,
   Typography
 } from "@mui/material"
 import { useRouter } from "next/router"
 import { FC, MouseEvent, useEffect, useState } from "react"
 import { appBarProps, notifications } from "./props"
 
-const NotificationList = styled(Menu)(({ theme }) => ({
+const NotificationList = styled(Menu)(() => ({
   marginTop: "30px",
   maxHeight: 230,
   "& .MuiMenu-paper": {
@@ -51,6 +61,9 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
   >(null)
   const [notificationList, setNotificationList] = useState<notifications[]>([])
   const [notificationCount, setNotificationCount] = useState<number>(0)
+  const [closeDialogStatus, setCloseDialogStatus] = useState<boolean>(false)
+  const [closeAboutDialog, setCloseAboutDialog] = useState<boolean>(false)
+  const [verifing, setVerifing] = useState<boolean>(false)
   useEffect(() => {
     window.Main.on("globalProcess", (data: any) => {
       if (data) {
@@ -64,6 +77,14 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
       }
     })
   }, [])
+
+  const handleCloseDialog = async () => {
+    setCloseDialogStatus(false)
+  }
+
+  const handleCloseAboutDialog = async () => {
+    setCloseAboutDialog(false)
+  }
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -92,12 +113,11 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
     try {
       switch (notification.type) {
         case "A":
-          router.push(`/updates`)
+        case "U":
+          window.Main.send("updatesOpenInBrowser", notification)
           break
         case "B":
-          router.push(`/boletim/${notification.relatedDocumentId}`).then(e => {
-            console.log(e)
-          })
+          router.push(`/boletim/${notification.relatedDocumentId}`)
           break
         case "C":
           router.push(`/classificador/${notification.relatedDocumentId}`)
@@ -110,14 +130,54 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
     }
   }
 
+  const goToAllNotifies = async () => {
+    router.push("/myNotificationList")
+  }
+
+  const closeApp = async () => {
+    setCloseDialogStatus(true)
+  }
+
+  const handleVerifyBoletins = async () => {
+    setVerifing(!verifing)
+  }
+
+  const handleAbout = async () => {
+    setAnchorElUser(null)
+    setCloseAboutDialog(true)
+  }
+
+  const handleReport = async () => {
+    setAnchorElUser(null)
+    router.push("/reportBug")
+  }
+
   return (
     <AppBar sx={{ background: "#212121" }} position="absolute">
       <Toolbar variant="dense">
         <Box sx={{ flexGrow: 1 }}>
-          <Cloud
-            sx={{ marginRight: 2, color: props.hasInternet ? "green" : "red" }}
-          />
-          <Storage sx={{ color: props.dbIsConnected ? "green" : "red" }} />
+          <Tooltip
+            title={`${
+              props.hasInternet ? "Você esta online" : "Você esta Offline"
+            }`}
+          >
+            <Cloud
+              sx={{
+                marginRight: 2,
+                color: props.hasInternet ? "green" : "red"
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip
+            title={`${
+              props.dbIsConnected
+                ? "Base local conectada"
+                : "Base local desconectada ou inexistente"
+            }`}
+          >
+            <Storage sx={{ color: props.dbIsConnected ? "green" : "red" }} />
+          </Tooltip>
         </Box>
         <Box sx={{ flexGrow: 0 }}>
           <IconButton
@@ -129,9 +189,17 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
             color="inherit"
             onClick={handleOpenNotificationsMenu}
           >
-            <Badge badgeContent={notificationCount} color="primary">
-              <Notifications />
-            </Badge>
+            <Tooltip
+              title={`${
+                notificationCount > 0
+                  ? `Você possui ${notificationCount} Notificação(ões) não lida(s).`
+                  : `Você não possui nenhuma nova notificação.`
+              }`}
+            >
+              <Badge badgeContent={notificationCount} color="primary">
+                <Notifications />
+              </Badge>
+            </Tooltip>
           </IconButton>
           <NotificationList
             id="notification-appbar"
@@ -218,7 +286,11 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
             )}
 
             {notificationList && notificationList.length > 0 && (
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  goToAllNotifies()
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
@@ -234,17 +306,20 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
             )}
           </NotificationList>
 
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleOpenUserMenu}
-            color="inherit"
-          >
-            <Settings />
-          </IconButton>
+          <Tooltip title="Configurações">
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenUserMenu}
+              color="inherit"
+            >
+              <Settings />
+            </IconButton>
+          </Tooltip>
+
           <Menu
             sx={{ mt: "30px" }}
             id="menu-appbar"
@@ -263,13 +338,167 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
           >
             <MenuItem onClick={handleNotification}>
               <AdminPanelSettings />
-              <Box sx={{ width: "100%" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  ml: 1,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
                 <Typography>Notificações</Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem onClick={handleVerifyBoletins}>
+              <Refresh />
+              <Box
+                sx={{
+                  width: "100%",
+                  ml: 1,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                <Typography>Verificar</Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem onClick={handleAbout}>
+              <Info />
+              <Box
+                sx={{
+                  width: "100%",
+                  ml: 1,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                <Typography>Sobre</Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem onClick={handleReport}>
+              <BugReport />
+              <Box
+                sx={{
+                  width: "100%",
+                  ml: 1,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                <Typography>Reporte um bug</Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem onClick={closeApp}>
+              <Close />
+              <Box
+                sx={{
+                  width: "100%",
+                  ml: 1,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+                <Typography>Sair</Typography>
               </Box>
             </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
+      <Dialog
+        open={closeDialogStatus}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Deseja realmente sair ?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Deseja Realmente Sair do Leitor INR ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handleCloseDialog()
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              window.Main.send("CloseApp")
+            }}
+            autoFocus
+          >
+            Sair
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* About */}
+      <Dialog
+        open={closeAboutDialog}
+        onClose={handleCloseAboutDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">INR Leitor</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Typography variant="body1">
+              INR Publicações © {new Date().getFullYear()}. Todos os direitos
+              reservados.
+            </Typography>
+            <br />
+            <Typography variant="body1">
+              <strong>Versão: </strong>
+              <em>0.2.62</em>
+            </Typography>
+            <Typography variant="body1">
+              <strong>Data da publicação: </strong>
+              <em>01/01/2011</em>
+            </Typography>
+            <br />
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="caption" sx={{ color: "#000080" }}>
+                <strong>
+                  Editado por Boletins Informativos Ltda – CNPJ:
+                  62.173.406/0001-23
+                </strong>
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="caption" sx={{ color: "#000080" }}>
+                <strong>
+                  Rua Voluntários da Pátria, 2.468 – 23º andar – CEP 02402-000 –
+                  Santana – São Paulo / SP
+                </strong>{" "}
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="caption" sx={{ color: "#000080" }}>
+                <strong>
+                  Central do Assinante: (11) 2959 0220 / faleconosco@inr.com.br
+                </strong>
+              </Typography>
+            </Box>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setCloseAboutDialog(false)
+            }}
+            autoFocus
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   )
 }

@@ -182,10 +182,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "MENSAGENSDOSEDITORES")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    key={`abc-${index}`}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -219,10 +227,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "OPNIAO")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`def-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -256,10 +272,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "NOTICIAS")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`ghi-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -293,10 +317,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "TVINR")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`ghi-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -330,10 +362,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "JURISPRUDENCIA")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`jkl-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -367,10 +407,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "LEGISLACAO")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`mno-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -404,10 +452,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "PERGUNTAS")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`pqr-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -441,10 +497,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "SUPLEMENTOS")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`stu-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {
@@ -481,10 +545,18 @@ const Boletim: FC<boletimProps> = ({ ...props }) => {
             <></>
           )}
           {props.contents &&
-            props.contents.map(item => {
+            props.contents.map((item, index) => {
               if (item.tipo === "PARECERESNAOPUBLICADOSPELACGJSP")
                 return (
-                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid
+                    item
+                    key={`vxz-${index}`}
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                  >
                     <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
                       <a
                         onClick={() => {

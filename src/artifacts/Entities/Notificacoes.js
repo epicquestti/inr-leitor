@@ -10,41 +10,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 exports.__esModule = true;
 var typeorm_1 = require("typeorm");
-var Configuracoes = /** @class */ (function () {
-    function Configuracoes() {
+var Notificacoes = /** @class */ (function () {
+    function Notificacoes() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)(),
         __metadata("design:type", Number)
-    ], Configuracoes.prototype, "id");
+    ], Notificacoes.prototype, "id");
     __decorate([
         (0, typeorm_1.Column)({ nullable: false }),
         __metadata("design:type", Date)
-    ], Configuracoes.prototype, "createdAt");
+    ], Notificacoes.prototype, "createdAt");
     __decorate([
         (0, typeorm_1.Column)({ nullable: false }),
         __metadata("design:type", String)
-    ], Configuracoes.prototype, "text");
+    ], Notificacoes.prototype, "text");
     __decorate([
         (0, typeorm_1.Column)({ nullable: false, length: 1 }),
         __metadata("design:type", String)
-    ], Configuracoes.prototype, "type");
+    ], Notificacoes.prototype, "type");
     __decorate([
         (0, typeorm_1.Column)({ nullable: false }),
         __metadata("design:type", Boolean)
-    ], Configuracoes.prototype, "readed");
+    ], Notificacoes.prototype, "readed");
     __decorate([
         (0, typeorm_1.Column)({ nullable: true }),
         __metadata("design:type", Number)
-    ], Configuracoes.prototype, "relatedDocumentId");
+    ], Notificacoes.prototype, "relatedDocumentId");
     __decorate([
         (0, typeorm_1.Column)({ nullable: true }),
         __metadata("design:type", String)
-    ], Configuracoes.prototype, "version");
-    Configuracoes = __decorate([
+    ], Notificacoes.prototype, "version");
+    __decorate([
+        (0, typeorm_1.Column)({ nullable: true }),
+        __metadata("design:type", String)
+    ], Notificacoes.prototype, "link");
+    Notificacoes = __decorate([
         (0, typeorm_1.Entity)("Notificacoes")
-    ], Configuracoes);
-    return Configuracoes;
+    ], Notificacoes);
+    return Notificacoes;
 }());
-exports["default"] = Configuracoes;
+exports["default"] = Notificacoes;
 //# sourceMappingURL=Notificacoes.js.map

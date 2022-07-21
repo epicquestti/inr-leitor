@@ -1,20 +1,22 @@
-export {
-  favoriteThisBE,
-  favoriteThisClassificador,
-  getBoletimList,
-  getClassificadorById,
-  getClassificadoresList,
-  getFavoriteList,
-  getNotificationList,
-  getThisBoletimById,
-  removeThisFavorite
-} from "../process/comunication"
-export {
-  changeNotifyBE,
-  changeNotifyCL,
-  configurationProcess,
-  getConfigurations,
-  getNotifications,
-  initiCarrourcel,
-  verifyBoletins
-} from "../process/main"
+export { default as allNotificationReaded } from "./allNotificationReaded"
+export { default as changeNotifyBE } from "./changeNotifyBE"
+export { default as changeNotifyCL } from "./changeNotifyCL"
+export { default as checkDbStatus } from "./checkDbStatus"
+export { default as configurationProcess } from "./configurationProcess"
+export { default as favoriteThisBe } from "./favoriteThisBe"
+export { default as favoriteThisClassificador } from "./favoriteThisClassificador"
+export { default as getBoletimList } from "./getBoletimList"
+export { default as getClassificadorById } from "./getClassificadorById"
+export { default as getClassificadoresList } from "./getClassificadoresList"
+export { default as getConfigurations } from "./getConfigurations"
+export { default as getFavoriteList } from "./getFavoriteList"
+export { default as getNotificationGrid } from "./getNotificationGrid"
+export { default as getNotificationList } from "./getNotificationList"
+export { default as getNotifications } from "./getNotifications"
+export { default as getThisBoletimById } from "./getThisBoletimById"
+export { default as goToThisNotifyClick } from "./goToThisNotifyClick"
+export { default as initCarrourcel } from "./initCarrourcel"
+export { default as openInBrowser } from "./openInBrowser"
+export { default as removeThisFavorite } from "./removeThisFavorite"
+export { default as updatesOpenInBrowser } from "./updatesOpenInBrowser"
+export { default as verifyBoletins } from "./verifyBoletins"

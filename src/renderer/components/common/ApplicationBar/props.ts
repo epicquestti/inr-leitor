@@ -13,4 +13,5 @@ export type notifications = {
   type: string
   readed: boolean
   relatedDocumentId?: number
+  link?: string
 }

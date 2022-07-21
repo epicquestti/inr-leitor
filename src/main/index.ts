@@ -5,30 +5,13 @@ import {
   Menu,
   nativeImage,
   powerSaveBlocker,
-  shell,
   Tray
 } from "electron"
 import prepareNext from "electron-next"
 import * as path from "path"
 import { DataSource } from "typeorm"
 import { initDb } from "./lib"
-import {
-  changeNotifyBE,
-  changeNotifyCL,
-  configurationProcess,
-  favoriteThisBE,
-  favoriteThisClassificador,
-  getBoletimList,
-  getClassificadorById,
-  getClassificadoresList,
-  getFavoriteList,
-  getNotificationList,
-  getNotifications,
-  getThisBoletimById,
-  initiCarrourcel,
-  removeThisFavorite,
-  verifyBoletins
-} from "./process"
+import * as allProcess from "./process"
 let window: BrowserWindow | null
 const isDev = !app.isPackaged
 const iconPath = `${path.join(__dirname, "../assets/windowIcon.png")}`
@@ -37,7 +20,11 @@ const databasePath = path.join(userDataPath, "doc_app-0-3.sqlite")
 let quiting = false
 let tray: Tray | null
 let connection: DataSource | null
-
+const processList = Object.values(allProcess).map(process => ({
+  name: process.name,
+  handle: process.handle,
+  processListener: process.processListener
+}))
 powerSaveBlocker.start("prevent-app-suspension")
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true"
 
@@ -61,7 +48,7 @@ async function createWindow() {
 
   window = new BrowserWindow({
     height: 720,
-    width: 1024,
+    width: 1460,
     webPreferences: {
       backgroundThrottling: false,
       nodeIntegration: true,
@@ -104,18 +91,20 @@ async function createWindow() {
 
   const appVersion = app.getVersion()
   connection = await initDb(databasePath)
-  await configurationProcess(connection)
+  await allProcess.configurationProcess.handle(connection)
 
   setInterval(async () => {
-    await verifyBoletins(connection, iconPath, appVersion)
+    await allProcess.verifyBoletins.handle(connection, null, {
+      iconPath,
+      appVersion,
+      window
+    })
   }, 10000)
 }
 
 async function createTray() {
   const icon = nativeImage.createFromPath(iconPath)
-
   tray = new Tray(icon)
-
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Classificadores",
@@ -143,88 +132,28 @@ async function createTray() {
       }
     }
   ])
-
   tray.on("double-click", () => {
     window && window?.show()
   })
-
   tray.setContextMenu(contextMenu)
-
   tray.setToolTip("INR Publicações")
   tray.setTitle("INR Publicações")
 }
 
 async function registerListeners() {
   try {
-    ipcMain.on("checkDbStatus", e => {
-      e.sender.send("checkDbStatusResponse", {
-        dbConnected: connection?.isInitialized
-      })
+    processList.forEach(p => {
+      if (p.processListener) {
+        ipcMain.on(p.name, async (e, data) => {
+          await p.handle(connection, e, data)
+        })
+      }
     })
 
-    ipcMain.on("openInBrowser", async (_, data) => {
-      await shell.openExternal(data)
-    })
-
-    ipcMain.on(favoriteThisClassificador.name, async (e, data) => {
-      await favoriteThisClassificador.handle(connection, e, data)
-    })
-
-    ipcMain.on(getClassificadoresList.name, async (e, data) => {
-      await getClassificadoresList.handle(connection, e, data)
-    })
-
-    ipcMain.on(getClassificadorById.name, async (e, data) => {
-      await getClassificadorById.handle(connection, e, data)
-    })
-    // getFavoriteList
-    ipcMain.on(getFavoriteList.name, async (e, data) => {
-      await getFavoriteList.handle(connection, data, e)
-    })
-
-    // removeThisFavorite
-    ipcMain.on(removeThisFavorite.name, async (e, data) => {
-      await removeThisFavorite.handle(connection, data, e)
-    })
-
-    // getBoletimList
-    ipcMain.on(getBoletimList.name, async (e, data) => {
-      await getBoletimList.handle(connection, e, data)
-    })
-
-    // getThisBoletimById
-    ipcMain.on(getThisBoletimById.name, async (e, data) => {
-      await getThisBoletimById.handle(connection, e, data)
-    })
-
-    // favoriteThisBE
-    ipcMain.on(favoriteThisBE.name, async (e, data) => {
-      await favoriteThisBE.handle(connection, e, data)
-    })
-
-    // initiCarrourcel
-    ipcMain.on(initiCarrourcel.name, async e => {
-      await initiCarrourcel.handle(connection, e)
-    })
-
-    // changeNotifyBE
-    ipcMain.on(changeNotifyBE.name, async (e, data) => {
-      await changeNotifyBE.handle(connection, data, e)
-    })
-
-    // favoriteThisBE
-    ipcMain.on(changeNotifyCL.name, async (e, data) => {
-      await changeNotifyCL.handle(connection, data, e)
-    })
-
-    // getNotifications
-    ipcMain.on(getNotifications.name, async e => {
-      await getNotifications.handle(connection, e)
-    })
-
-    // getNotificationList
-    ipcMain.on(getNotificationList.name, async e => {
-      await getNotificationList.handle(connection, e)
+    // close App
+    ipcMain.on("CloseApp", async e => {
+      quiting = true
+      app.quit()
     })
   } catch (error) {
     console.log("Error to register listeners")
@@ -242,6 +171,12 @@ async function activateApp() {
     createWindow()
   }
 }
+
+// app.setLoginItemSettings({
+//   name: "Leitor INR",
+//   openAtLogin: true,
+//   path: app.getPath("exe")
+// })
 
 app
   .on("ready", createWindow)

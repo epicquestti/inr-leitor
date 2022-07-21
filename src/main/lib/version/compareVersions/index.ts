@@ -49,9 +49,9 @@ const compareVersions = async (
 
     let needUpdateForVersion = false
 
-    if (v > versionRequest.version) needUpdateForVersion = true
-    if (major > versionRequest.major) needUpdateForVersion = true
-    if (minor > versionRequest.minor) needUpdateForVersion = true
+    if (v < versionRequest.version) needUpdateForVersion = true
+    if (major < versionRequest.major) needUpdateForVersion = true
+    if (minor < versionRequest.minor) needUpdateForVersion = true
 
     if (needUpdateForVersion)
       if (versionRequest.severity === "urgent")

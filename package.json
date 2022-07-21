@@ -1,7 +1,7 @@
 {
   "name": "inr-app",
   "productName": "Leitor INR",
-  "version": "0.2.62",
+  "version": "0.2.63",
   "description": "Aplicativo Voltado para o cliente INR onde o mesmo pode acompanhar as publicações INR em tempo real.",
   "main": "src/artifacts/index.js",
   "scripts": {
@@ -34,6 +34,12 @@
       "src/artifacts",
       "src/renderer/out"
     ],
+    "win": {
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "signAndEditExecutable": true
+    },
     "nsis": {
       "installerIcon": "src/assets/setupicon.ico",
       "uninstallerIcon": "src/assets/uninstallIcon.ico",
@@ -92,7 +98,6 @@
     "axios": "0.27.2",
     "electron-log": "^4.4.8",
     "electron-next": "3.1.5",
-    "electron-squirrel-startup": "1.0.0",
     "electron-updater": "^5.0.5",
     "next": "12.2.0",
     "react": "18.2.0",

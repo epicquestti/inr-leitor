@@ -62,7 +62,7 @@ var electron_1 = require("electron");
 var electron_next_1 = __importDefault(require("electron-next"));
 var path = __importStar(require("path"));
 var lib_1 = require("./lib");
-var process_1 = require("./process");
+var allProcess = __importStar(require("./process"));
 var window;
 var isDev = !electron_1.app.isPackaged;
 var iconPath = "".concat(path.join(__dirname, "../assets/windowIcon.png"));
@@ -71,6 +71,11 @@ var databasePath = path.join(userDataPath, "doc_app-0-3.sqlite");
 var quiting = false;
 var tray;
 var connection;
+var processList = Object.values(allProcess).map(function (process) { return ({
+    name: process.name,
+    handle: process.handle,
+    processListener: process.processListener
+}); });
 electron_1.powerSaveBlocker.start("prevent-app-suspension");
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 function previneSecondInstance() {
@@ -105,7 +110,7 @@ function createWindow() {
                     _a.sent();
                     window = new electron_1.BrowserWindow({
                         height: 720,
-                        width: 1024,
+                        width: 1460,
                         webPreferences: {
                             backgroundThrottling: false,
                             nodeIntegration: true,
@@ -142,13 +147,17 @@ function createWindow() {
                     return [4 /*yield*/, (0, lib_1.initDb)(databasePath)];
                 case 2:
                     connection = _a.sent();
-                    return [4 /*yield*/, (0, process_1.configurationProcess)(connection)];
+                    return [4 /*yield*/, allProcess.configurationProcess.handle(connection)];
                 case 3:
                     _a.sent();
                     setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, (0, process_1.verifyBoletins)(connection, iconPath, appVersion)];
+                                case 0: return [4 /*yield*/, allProcess.verifyBoletins.handle(connection, null, {
+                                        iconPath: iconPath,
+                                        appVersion: appVersion,
+                                        window: window
+                                    })];
                                 case 1:
                                     _a.sent();
                                     return [2 /*return*/];
@@ -208,159 +217,26 @@ function registerListeners() {
         var _this = this;
         return __generator(this, function (_a) {
             try {
-                electron_1.ipcMain.on("checkDbStatus", function (e) {
-                    e.sender.send("checkDbStatusResponse", {
-                        dbConnected: connection === null || connection === void 0 ? void 0 : connection.isInitialized
-                    });
+                processList.forEach(function (p) {
+                    if (p.processListener) {
+                        electron_1.ipcMain.on(p.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, p.handle(connection, e, data)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                    }
                 });
-                electron_1.ipcMain.on("openInBrowser", function (_, data) { return __awaiter(_this, void 0, void 0, function () {
+                // close App
+                electron_1.ipcMain.on("CloseApp", function (e) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, electron_1.shell.openExternal(data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                electron_1.ipcMain.on(process_1.favoriteThisClassificador.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.favoriteThisClassificador.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                electron_1.ipcMain.on(process_1.getClassificadoresList.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getClassificadoresList.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                electron_1.ipcMain.on(process_1.getClassificadorById.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getClassificadorById.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // getFavoriteList
-                electron_1.ipcMain.on(process_1.getFavoriteList.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getFavoriteList.handle(connection, data, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // removeThisFavorite
-                electron_1.ipcMain.on(process_1.removeThisFavorite.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.removeThisFavorite.handle(connection, data, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // getBoletimList
-                electron_1.ipcMain.on(process_1.getBoletimList.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getBoletimList.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // getThisBoletimById
-                electron_1.ipcMain.on(process_1.getThisBoletimById.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getThisBoletimById.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // favoriteThisBE
-                electron_1.ipcMain.on(process_1.favoriteThisBE.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.favoriteThisBE.handle(connection, e, data)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // initiCarrourcel
-                electron_1.ipcMain.on(process_1.initiCarrourcel.name, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.initiCarrourcel.handle(connection, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // changeNotifyBE
-                electron_1.ipcMain.on(process_1.changeNotifyBE.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.changeNotifyBE.handle(connection, data, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // favoriteThisBE
-                electron_1.ipcMain.on(process_1.changeNotifyCL.name, function (e, data) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.changeNotifyCL.handle(connection, data, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // getNotifications
-                electron_1.ipcMain.on(process_1.getNotifications.name, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getNotifications.handle(connection, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-                // getNotificationList
-                electron_1.ipcMain.on(process_1.getNotificationList.name, function (e) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, process_1.getNotificationList.handle(connection, e)];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
-                        }
+                        quiting = true;
+                        electron_1.app.quit();
+                        return [2 /*return*/];
                     });
                 }); });
             }
@@ -391,6 +267,11 @@ function activateApp() {
         });
     });
 }
+// app.setLoginItemSettings({
+//   name: "Leitor INR",
+//   openAtLogin: true,
+//   path: app.getPath("exe")
+// })
 electron_1.app
     .on("ready", createWindow)
     .on("second-instance", previneSecondInstance)

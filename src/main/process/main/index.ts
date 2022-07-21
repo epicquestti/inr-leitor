@@ -1,7 +1,0 @@
-export { default as changeNotifyBE } from "./changeNotifyBE"
-export { default as changeNotifyCL } from "./changeNotifyCL"
-export { default as configurationProcess } from "./configurationProcess"
-export { default as getConfigurations } from "./getConfigurations"
-export { default as getNotifications } from "./getNotifications"
-export { default as initiCarrourcel } from "./initCarrourcel"
-export { default as verifyBoletins } from "./verifyBoletins"

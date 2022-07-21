@@ -60,6 +60,7 @@ const Home = () => {
           }
         }
         setCarrourcelItens(newResult)
+        setLoading(false)
       })
 
       window.Main.on("reloadFavoritos", (data: any) => {
@@ -77,13 +78,11 @@ const Home = () => {
       window.Main.send("initiCarrourcel")
       window.Main.send("getFavoriteList")
       window.Main.send("getNotificationList")
+      setLoading(true)
     } catch (error: any) {
       setMsg(error.message)
       setOpenSnack(true)
-    } finally {
-      setTimeout(() => {
-        setLoading(false)
-      }, 2000)
+      setLoading(false)
     }
   }
 

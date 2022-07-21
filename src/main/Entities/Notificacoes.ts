@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity("Notificacoes")
-export default class Configuracoes {
+export default class Notificacoes {
   @PrimaryGeneratedColumn()
   id!: number
 
@@ -22,4 +22,7 @@ export default class Configuracoes {
 
   @Column({ nullable: true })
   version!: string
+
+  @Column({ nullable: true })
+  link!: string
 }

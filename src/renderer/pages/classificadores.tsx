@@ -5,7 +5,6 @@ import { ClassificadoresList, View } from "../components"
 const Classificadores = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [list] = useState<[]>([])
-  // useEffect(() => {}, [])
   return (
     <View
       loading={loading}
