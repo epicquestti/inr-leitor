@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,53 +50,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+var electron_1 = require("electron");
+var os_1 = __importDefault(require("os"));
 var app_1 = __importDefault(require("../../config/app"));
+var Entities_1 = require("../../Entities");
 var lib_1 = require("../../lib");
-var getConfigurations_1 = __importDefault(require("../getConfigurations"));
-var processBoletim_1 = __importDefault(require("./processBoletim"));
-var processClassificadores_1 = __importDefault(require("./processClassificadores"));
-var processNotificationsUpdates_1 = __importDefault(require("./processNotificationsUpdates"));
-var processTray_1 = __importDefault(require("./processTray"));
 exports["default"] = {
-    name: "verifyBoletins",
-    processListener: false,
+    name: "sendBugReport",
+    processListener: true,
     handle: function (db, event, data) { return __awaiter(void 0, void 0, void 0, function () {
-        var lastPublishes, appConfig, versionProcessResult, beProcessResult, clProcessResult, error_1;
+        var osVersion, appVersion, appConfigsrepository, appConfig, body, response, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
-                    return [4 /*yield*/, (0, lib_1.GET)(app_1["default"].api.inr.lastPublishes)];
+                    _a.trys.push([0, 4, , 5]);
+                    osVersion = os_1["default"].version();
+                    appVersion = electron_1.app.getVersion();
+                    return [4 /*yield*/, db.getRepository(Entities_1.Configuracoes)];
                 case 1:
-                    lastPublishes = _a.sent();
-                    return [4 /*yield*/, getConfigurations_1["default"].handle(db)];
+                    appConfigsrepository = _a.sent();
+                    return [4 /*yield*/, appConfigsrepository.findOneBy({
+                            id: 1
+                        })];
                 case 2:
                     appConfig = _a.sent();
-                    if (!(appConfig && lastPublishes)) return [3 /*break*/, 9];
-                    return [4 /*yield*/, lib_1.versionTools.compareVersions(data.appVersion, lastPublishes.version)];
+                    body = __assign({ os: osVersion, version: appVersion, appConfig: appConfig, reportType: "APP" }, data);
+                    return [4 /*yield*/, (0, lib_1.POST)(app_1["default"].api.inr.sendReport, body)];
                 case 3:
-                    versionProcessResult = _a.sent();
-                    if (!versionProcessResult.success) return [3 /*break*/, 7];
-                    return [4 /*yield*/, (0, processBoletim_1["default"])(db, appConfig, lastPublishes)];
+                    response = _a.sent();
+                    if (response.success) {
+                        event.sender.send("reportBugReload", { success: true });
+                    }
+                    else
+                        throw new Error(response.message);
+                    return [3 /*break*/, 5];
                 case 4:
-                    beProcessResult = _a.sent();
-                    return [4 /*yield*/, (0, processClassificadores_1["default"])(db, appConfig, lastPublishes)];
-                case 5:
-                    clProcessResult = _a.sent();
-                    return [4 /*yield*/, (0, processTray_1["default"])(data.iconPath, beProcessResult, clProcessResult, data.window)];
-                case 6:
-                    _a.sent();
-                    _a.label = 7;
-                case 7: return [4 /*yield*/, (0, processNotificationsUpdates_1["default"])(db, lastPublishes.version, versionProcessResult)];
-                case 8:
-                    _a.sent();
-                    _a.label = 9;
-                case 9: return [3 /*break*/, 11];
-                case 10:
                     error_1 = _a.sent();
-                    console.log(error_1.message);
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/];
+                    event === null || event === void 0 ? void 0 : event.sender.send("reportBugReload", {
+                        success: false,
+                        message: error_1.message
+                    });
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); }

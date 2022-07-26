@@ -3,29 +3,169 @@ import {
   Box,
   Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   Grid,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Paper,
   Select,
+  SelectChangeEvent,
+  Snackbar,
   TextField,
   Typography
 } from "@mui/material"
 import { useRouter } from "next/router"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { View } from "../components"
 const ReportBug = () => {
   const router = useRouter()
-  const [fone, setFone] = useState("")
+  const [tratamento, setTratamento] = useState<string>("")
+  const [nome, setNome] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [ddd, setDdd] = useState<number>(0)
+  const [fone, setFone] = useState<string>("")
+  const [descricao, setDescricao] = useState<string>("")
   const [isWhatsApp, setIsWhatsApp] = useState<boolean>(false)
+  const [contactWhats, setContactWhats] = useState<boolean>(false)
+  const [contactEmail, setContactEmail] = useState<boolean>(false)
+  const [contactLigacao, setContactLigacao] = useState<boolean>(false)
+  const [contactNo, setContactNo] = useState<boolean>(false)
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [blockWhatsContact, setBlockWhatsContact] = useState<boolean>(true)
+  const [blockAllContacts, setBlockAllContacts] = useState<boolean>(false)
+
+  const [reportBugShow, setReportBugShow] = useState<boolean>(false)
+  const [reportBugSuccess, setReportBugSuccess] = useState<boolean>(false)
+
+  const [openSnack, setOpenSnack] = useState<boolean>(false)
+  const [msg, setMsg] = useState("")
+  const [error, setError] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ])
+
+  useEffect(() => {
+    window.Main.on("reportBugReload", (data: any) => {
+      if (data.success) {
+        setTimeout(() => {
+          setLoading(false)
+          setReportBugSuccess(true)
+          setReportBugShow(true)
+        }, 2000)
+      } else {
+        setTimeout(() => {
+          setLoading(false)
+          setMsg(data.message)
+          setOpenSnack(true)
+        }, 2000)
+      }
+    })
+  }, [])
+
+  const handleReportBugResult = () => {
+    setReportBugShow(false)
+  }
+
+  const handleClose = () => {
+    setOpenSnack(false)
+  }
 
   const mascaraTelefone = (v: string) => {
     v = v.replace(/\D/g, "")
     v = v.replace(/(\d)(\d{4})$/, "$1-$2")
     return v
   }
+
+  const handleCloseDialog = async () => {
+    setLoading(false)
+  }
+
+  const sendBugReport = () => {
+    try {
+      if (!tratamento) {
+        const tmp = [...error]
+        tmp[0] = true
+        setError(tmp)
+        throw new Error("Favor preencha o campo Tratamento.")
+      }
+
+      if (!nome) {
+        const tmp = [...error]
+        tmp[1] = true
+        setError(tmp)
+        throw new Error("Favor preencha o campo Nome.")
+      }
+
+      if (!email) {
+        const tmp = [...error]
+        tmp[2] = true
+        setError(tmp)
+        throw new Error("Favor preencha o campo email.")
+      }
+
+      if (ddd === 0) {
+        const tmp = [...error]
+        tmp[3] = true
+        setError(tmp)
+        throw new Error("Favor preencha o campo Ddd.")
+      }
+
+      if (!fone) {
+        const tmp = [...error]
+        tmp[4] = true
+        setError(tmp)
+        throw new Error("Favor preencha o campo Telefone.")
+      }
+
+      if (!contactNo) {
+        if (!contactWhats && !contactEmail && !contactLigacao) {
+          throw new Error(
+            `Favor selecione um meio de contato ou então "não quero ser contactado". caso whatsapp seja uma de suas opções selecione a opção "O número esta no whatsapp" para habilitar a opção de contato por whatsapp.`
+          )
+        }
+      }
+
+      if (!descricao) {
+        const tmp = [...error]
+        tmp[5] = true
+        setError(tmp)
+        throw new Error("Favor descreve o bug/problema a ser reportado.")
+      }
+
+      const body = {
+        tratamento,
+        nome,
+        email,
+        ddd,
+        fone,
+        contactWhats,
+        contactEmail,
+        contactLigacao,
+        contactNo,
+        descricao
+      }
+
+      setLoading(true)
+      window.Main.send("sendBugReport", body)
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+      setLoading(false)
+      return
+    }
+  }
+
   return (
     <View loading={false}>
       <Grid container spacing={3}>
@@ -37,6 +177,7 @@ const ReportBug = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
                 <Button
+                  disabled={loading}
                   fullWidth
                   variant="outlined"
                   onClick={() => {
@@ -50,9 +191,18 @@ const ReportBug = () => {
                 <FormControl fullWidth>
                   <InputLabel id="select-tratamento-id">Tratamento</InputLabel>
                   <Select
+                    error={error[0]}
+                    disabled={loading}
                     labelId="select-tratamento-id"
                     fullWidth
                     label="Tratamento"
+                    value={tratamento}
+                    onChange={(event: SelectChangeEvent<string>) => {
+                      const tmp = [...error]
+                      tmp[0] = false
+                      setError(tmp)
+                      setTratamento(event.target.value)
+                    }}
                   >
                     <MenuItem value={""}>Selecione</MenuItem>
                     <MenuItem value={"Sr"}>Sr</MenuItem>
@@ -65,27 +215,55 @@ const ReportBug = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
                 <TextField
+                  error={error[1]}
+                  disabled={loading}
                   fullWidth
                   variant="outlined"
                   label="Nome (completo)"
+                  inputProps={{ maxLength: 100 }}
+                  value={nome}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const tmp = [...error]
+                    tmp[1] = false
+                    setError(tmp)
+                    setNome(e.target.value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
                 <TextField
+                  error={error[2]}
+                  disabled={loading}
                   fullWidth
                   variant="outlined"
-                  value={fone}
+                  value={email}
                   label="Email"
                   inputProps={{ maxLength: 10 }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setFone(mascaraTelefone(e.target.value))
+                    const tmp = [...error]
+                    tmp[2] = false
+                    setError(tmp)
+                    setEmail(e.target.value)
                   }}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={1} lg={1} xl={1}>
                 <FormControl fullWidth>
                   <InputLabel id="select-tratamento-id">DDD</InputLabel>
-                  <Select labelId="select-tratamento-id" fullWidth label="DDD">
+                  <Select
+                    error={error[3]}
+                    disabled={loading}
+                    labelId="select-tratamento-id"
+                    fullWidth
+                    label="DDD"
+                    value={ddd}
+                    onChange={(event: SelectChangeEvent<number>) => {
+                      const tmp = [...error]
+                      tmp[3] = false
+                      setError(tmp)
+                      setDdd(parseInt(event.target.value.toString()))
+                    }}
+                  >
                     <MenuItem value={0}>Selecione</MenuItem>
                     <MenuItem value={11}>11</MenuItem>
                     <MenuItem value={12}>12</MenuItem>
@@ -159,12 +337,17 @@ const ReportBug = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
                 <TextField
+                  error={error[4]}
+                  disabled={loading}
                   fullWidth
                   variant="outlined"
                   value={fone}
                   label="Telefone"
                   inputProps={{ maxLength: 10 }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const tmp = [...error]
+                    tmp[4] = false
+                    setError(tmp)
                     setFone(mascaraTelefone(e.target.value))
                   }}
                 />
@@ -185,13 +368,20 @@ const ReportBug = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
+                        disabled={blockAllContacts || loading}
+                        checked={isWhatsApp}
                         onChange={(
-                          event: ChangeEvent<HTMLInputElement>,
+                          _: ChangeEvent<HTMLInputElement>,
                           checked: boolean
                         ) => {
-                          console.log(checked)
-
                           setIsWhatsApp(checked)
+
+                          if (!checked) {
+                            setContactWhats(false)
+                            setBlockWhatsContact(true)
+                          } else {
+                            setBlockWhatsContact(false)
+                          }
                         }}
                         icon={<WhatsApp />}
                         checkedIcon={<WhatsApp sx={{ color: "green" }} />}
@@ -219,11 +409,15 @@ const ReportBug = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          disabled={
+                            blockWhatsContact || blockAllContacts || loading
+                          }
+                          checked={contactWhats}
                           onChange={(
-                            event: ChangeEvent<HTMLInputElement>,
+                            _: ChangeEvent<HTMLInputElement>,
                             checked: boolean
                           ) => {
-                            console.log(checked)
+                            setContactWhats(checked)
                           }}
                         />
                       }
@@ -234,11 +428,13 @@ const ReportBug = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          disabled={blockAllContacts || loading}
+                          checked={contactEmail}
                           onChange={(
-                            event: ChangeEvent<HTMLInputElement>,
+                            _: ChangeEvent<HTMLInputElement>,
                             checked: boolean
                           ) => {
-                            console.log(checked)
+                            setContactEmail(checked)
                           }}
                         />
                       }
@@ -249,11 +445,13 @@ const ReportBug = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          disabled={blockAllContacts || loading}
+                          checked={contactLigacao}
                           onChange={(
-                            event: ChangeEvent<HTMLInputElement>,
+                            _: ChangeEvent<HTMLInputElement>,
                             checked: boolean
                           ) => {
-                            console.log(checked)
+                            setContactLigacao(checked)
                           }}
                         />
                       }
@@ -264,11 +462,23 @@ const ReportBug = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          disabled={loading}
+                          checked={contactNo}
                           onChange={(
-                            event: ChangeEvent<HTMLInputElement>,
+                            _: ChangeEvent<HTMLInputElement>,
                             checked: boolean
                           ) => {
-                            console.log(checked)
+                            setContactNo(checked)
+                            if (checked) {
+                              setContactLigacao(false)
+                              setContactEmail(false)
+                              setContactWhats(false)
+                              setIsWhatsApp(false)
+                              setBlockAllContacts(true)
+                            } else {
+                              setBlockAllContacts(false)
+                              setBlockWhatsContact(true)
+                            }
                           }}
                         />
                       }
@@ -279,16 +489,30 @@ const ReportBug = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TextField
+                  disabled={loading}
+                  error={error[5]}
                   fullWidth
                   multiline
-                  rows={10}
+                  minRows={10}
                   maxRows={80}
                   variant="outlined"
                   label="Descreva o bug"
+                  value={descricao}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const tmp = [...error]
+                    tmp[5] = false
+                    setError(tmp)
+                    setDescricao(e.target.value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                <Button fullWidth variant="contained">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                  onClick={sendBugReport}
+                >
                   Reportar o bug
                 </Button>
               </Grid>
@@ -296,6 +520,51 @@ const ReportBug = () => {
           </Paper>
         </Grid>
       </Grid>
+      <Dialog onClose={handleCloseDialog} open={loading}>
+        <DialogTitle>Por favor aguarde...</DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog onClose={handleReportBugResult} open={reportBugShow}>
+        <DialogTitle>
+          {reportBugSuccess ? "Sucesso" : "Houve um erro..."}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: "100%" }}>
+            {reportBugSuccess ? (
+              <Typography variant="body1">
+                O Bug foi reportado com sucesso. Agradecemos por seu tempo
+              </Typography>
+            ) : (
+              <Typography variant="body1">
+                Houve um erro ao enviar o bug. Por favor, tente novamente mais
+                tarde.
+              </Typography>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              router.push("/")
+            }}
+            autoFocus
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={8000}
+        onClose={handleClose}
+        message={msg}
+      />
     </View>
   )
 }

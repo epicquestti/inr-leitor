@@ -1,5 +1,5 @@
-import { Close as CloseIcon } from "@mui/icons-material"
-import { Grid, IconButton, Snackbar } from "@mui/material"
+import { Close } from "@mui/icons-material"
+import { Button, Grid, IconButton, Snackbar } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { Boletim, View } from "../../components"
@@ -53,14 +53,19 @@ export default function ReadingBoletim() {
   }, [])
 
   const action = (
-    <IconButton
-      size="small"
-      aria-label="close"
-      color="inherit"
-      onClick={handleClose}
-    >
-      <CloseIcon fontSize="small" />
-    </IconButton>
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        fechar
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </>
   )
   return (
     <View

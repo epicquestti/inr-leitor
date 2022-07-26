@@ -23,8 +23,10 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  LinearProgress,
   Menu,
   MenuItem,
+  Snackbar,
   styled,
   Toolbar,
   Tooltip,
@@ -64,6 +66,10 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
   const [closeDialogStatus, setCloseDialogStatus] = useState<boolean>(false)
   const [closeAboutDialog, setCloseAboutDialog] = useState<boolean>(false)
   const [verifing, setVerifing] = useState<boolean>(false)
+  const [version, setVersion] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
+  const [openSnack, setOpenSnack] = useState<boolean>(false)
+  const [msg, setMsg] = useState<string>("")
   useEffect(() => {
     window.Main.on("globalProcess", (data: any) => {
       if (data) {
@@ -76,7 +82,32 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
         setNotificationCount(data.data.notificationCount)
       }
     })
+    window.Main.on("reloadAbout", (data: any) => {
+      if (data.success) {
+        setVersion(data.version)
+        setLoading(false)
+        setCloseAboutDialog(true)
+      } else {
+        setLoading(false)
+        setMsg("Erro ao verificar informações.")
+        setOpenSnack(true)
+      }
+    })
+
+    window.Main.on("clientVerifyBoletinsResponse", (data: any) => {
+      setMsg(data.message)
+      setLoading(false)
+      setOpenSnack(true)
+    })
   }, [])
+
+  const handleCloseLoading = async () => {
+    setLoading(false)
+  }
+
+  const handleCloseSnack = async () => {
+    setOpenSnack(false)
+  }
 
   const handleCloseDialog = async () => {
     setCloseDialogStatus(false)
@@ -139,18 +170,44 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
   }
 
   const handleVerifyBoletins = async () => {
-    setVerifing(!verifing)
+    setLoading(true)
+    setAnchorElUser(null)
+    setTimeout(() => {
+      window.Main.send("clientVerifyBoletins")
+    }, 1000)
   }
 
   const handleAbout = async () => {
+    setLoading(true)
     setAnchorElUser(null)
-    setCloseAboutDialog(true)
+    setTimeout(() => {
+      window.Main.send("getVersionDetails")
+    }, 1000)
   }
 
   const handleReport = async () => {
     setAnchorElUser(null)
-    router.push("/reportBug")
+    setLoading(true)
+    setTimeout(() => {
+      router.push("/reportBug")
+    }, 2000)
   }
+
+  const Action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleCloseSnack}>
+        fechar
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnack}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </>
+  )
 
   return (
     <AppBar sx={{ background: "#212121" }} position="absolute">
@@ -453,11 +510,7 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
             <br />
             <Typography variant="body1">
               <strong>Versão: </strong>
-              <em>0.2.62</em>
-            </Typography>
-            <Typography variant="body1">
-              <strong>Data da publicação: </strong>
-              <em>01/01/2011</em>
+              <em>{version}</em>
             </Typography>
             <br />
             <Box sx={{ display: "flex" }}>
@@ -468,7 +521,6 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
                 </strong>
               </Typography>
             </Box>
-
             <Box sx={{ display: "flex" }}>
               <Typography variant="caption" sx={{ color: "#000080" }}>
                 <strong>
@@ -477,7 +529,6 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
                 </strong>{" "}
               </Typography>
             </Box>
-
             <Box sx={{ display: "flex" }}>
               <Typography variant="caption" sx={{ color: "#000080" }}>
                 <strong>
@@ -499,6 +550,21 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog onClose={handleCloseLoading} open={loading}>
+        <DialogTitle>Por favor aguarde...</DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        </DialogContent>
+      </Dialog>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+        message={msg}
+        action={Action}
+      />
     </AppBar>
   )
 }

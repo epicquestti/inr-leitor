@@ -1,5 +1,5 @@
-import CloseIcon from "@mui/icons-material/Close"
-import { Grid, IconButton, Snackbar } from "@mui/material"
+import { Close } from "@mui/icons-material"
+import { Button, Grid, IconButton, Snackbar } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { Classificador, View } from "../../components"
@@ -82,14 +82,19 @@ const ReadingClassificador = () => {
   }, [])
 
   const action = (
-    <IconButton
-      size="small"
-      aria-label="close"
-      color="inherit"
-      onClick={handleClose}
-    >
-      <CloseIcon fontSize="small" />
-    </IconButton>
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        fechar
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </>
   )
   return (
     <View

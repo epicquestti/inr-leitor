@@ -39,53 +39,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var app_1 = __importDefault(require("../../config/app"));
-var lib_1 = require("../../lib");
-var getConfigurations_1 = __importDefault(require("../getConfigurations"));
-var processBoletim_1 = __importDefault(require("./processBoletim"));
-var processClassificadores_1 = __importDefault(require("./processClassificadores"));
-var processNotificationsUpdates_1 = __importDefault(require("./processNotificationsUpdates"));
-var processTray_1 = __importDefault(require("./processTray"));
+var verifyBoletins_1 = __importDefault(require("../verifyBoletins"));
 exports["default"] = {
-    name: "verifyBoletins",
-    processListener: false,
+    name: "clientVerifyBoletins",
+    processListener: true,
     handle: function (db, event, data) { return __awaiter(void 0, void 0, void 0, function () {
-        var lastPublishes, appConfig, versionProcessResult, beProcessResult, clProcessResult, error_1;
+        var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
-                    return [4 /*yield*/, (0, lib_1.GET)(app_1["default"].api.inr.lastPublishes)];
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, verifyBoletins_1["default"].handle(db, event, data)];
                 case 1:
-                    lastPublishes = _a.sent();
-                    return [4 /*yield*/, getConfigurations_1["default"].handle(db)];
+                    _a.sent();
+                    return [2 /*return*/, event.sender.send("clientVerifyBoletinsResponse", {
+                            message: "Verificação concluida."
+                        })];
                 case 2:
-                    appConfig = _a.sent();
-                    if (!(appConfig && lastPublishes)) return [3 /*break*/, 9];
-                    return [4 /*yield*/, lib_1.versionTools.compareVersions(data.appVersion, lastPublishes.version)];
-                case 3:
-                    versionProcessResult = _a.sent();
-                    if (!versionProcessResult.success) return [3 /*break*/, 7];
-                    return [4 /*yield*/, (0, processBoletim_1["default"])(db, appConfig, lastPublishes)];
-                case 4:
-                    beProcessResult = _a.sent();
-                    return [4 /*yield*/, (0, processClassificadores_1["default"])(db, appConfig, lastPublishes)];
-                case 5:
-                    clProcessResult = _a.sent();
-                    return [4 /*yield*/, (0, processTray_1["default"])(data.iconPath, beProcessResult, clProcessResult, data.window)];
-                case 6:
-                    _a.sent();
-                    _a.label = 7;
-                case 7: return [4 /*yield*/, (0, processNotificationsUpdates_1["default"])(db, lastPublishes.version, versionProcessResult)];
-                case 8:
-                    _a.sent();
-                    _a.label = 9;
-                case 9: return [3 /*break*/, 11];
-                case 10:
                     error_1 = _a.sent();
-                    console.log(error_1.message);
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/];
+                    return [2 /*return*/, event.sender.send("clientVerifyBoletinsResponse", {
+                            message: error_1.message
+                        })];
+                case 3: return [2 /*return*/];
             }
         });
     }); }
