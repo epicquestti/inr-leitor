@@ -65,7 +65,6 @@ const ApplicationBar: FC<appBarProps> = ({ ...props }) => {
   const [notificationCount, setNotificationCount] = useState<number>(0)
   const [closeDialogStatus, setCloseDialogStatus] = useState<boolean>(false)
   const [closeAboutDialog, setCloseAboutDialog] = useState<boolean>(false)
-  const [verifing, setVerifing] = useState<boolean>(false)
   const [version, setVersion] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [openSnack, setOpenSnack] = useState<boolean>(false)

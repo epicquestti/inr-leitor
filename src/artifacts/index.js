@@ -68,6 +68,7 @@ var isDev = !electron_1.app.isPackaged;
 var iconPath = "".concat(path.join(__dirname, "../assets/windowIcon.png"));
 var userDataPath = electron_1.app.getPath("userData");
 var databasePath = path.join(userDataPath, "doc_app-0-3.sqlite");
+var intervalValue = isDev ? 10000 : 600000;
 var quiting = false;
 var tray;
 var connection;
@@ -163,7 +164,7 @@ function createWindow() {
                                     return [2 /*return*/];
                             }
                         });
-                    }); }, 10000);
+                    }); }, intervalValue);
                     return [2 /*return*/];
             }
         });
@@ -267,11 +268,11 @@ function activateApp() {
         });
     });
 }
-// app.setLoginItemSettings({
-//   name: "Leitor INR",
-//   openAtLogin: true,
-//   path: app.getPath("exe")
-// })
+electron_1.app.setLoginItemSettings({
+    name: "Leitor INR",
+    openAtLogin: true,
+    path: electron_1.app.getPath("exe")
+});
 electron_1.app
     .on("ready", createWindow)
     .on("second-instance", previneSecondInstance)

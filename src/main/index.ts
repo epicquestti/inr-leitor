@@ -17,6 +17,7 @@ const isDev = !app.isPackaged
 const iconPath = `${path.join(__dirname, "../assets/windowIcon.png")}`
 const userDataPath = app.getPath("userData")
 const databasePath = path.join(userDataPath, "doc_app-0-3.sqlite")
+const intervalValue = isDev ? 10000 : 600000
 let quiting = false
 let tray: Tray | null
 let connection: DataSource | null
@@ -99,7 +100,7 @@ async function createWindow() {
       appVersion,
       window
     })
-  }, 10000)
+  }, intervalValue)
 }
 
 async function createTray() {
@@ -172,11 +173,11 @@ async function activateApp() {
   }
 }
 
-// app.setLoginItemSettings({
-//   name: "Leitor INR",
-//   openAtLogin: true,
-//   path: app.getPath("exe")
-// })
+app.setLoginItemSettings({
+  name: "Leitor INR",
+  openAtLogin: true,
+  path: app.getPath("exe")
+})
 
 app
   .on("ready", createWindow)

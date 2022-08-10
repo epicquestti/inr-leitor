@@ -1,11 +1,22 @@
-Termos de Uso
+Leitor INR
+Versão atual: 0.2.63
+ 
+Leitor INR é um aplicativo para distribuição livre e gratuita destinada a Assinantes INR.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum id diam augue. Sed eleifend ante et ligula tristique vestibulum. Vestibulum a nunc vehicula, laoreet purus malesuada, ornare augue. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin id pharetra nulla. Etiam vehicula scelerisque augue. Sed ultricies elit eget consectetur imperdiet. Aliquam erat volutpat.
+O Leitor INR não coleta quaisquer dados pessoais do seu usuário.
 
-Nunc aliquet leo at tortor dictum, euismod commodo ex bibendum. Cras mi elit, tempor sed magna vitae, dapibus sagittis sapien. Proin pretium ante vel erat auctor, nec condimentum arcu scelerisque. Nullam non turpis vitae libero bibendum accumsan nec eget quam. Ut id quam gravida, efficitur est nec, varius urna. Suspendisse sed lectus sit amet ex lacinia placerat. Aenean pellentesque eros eu ex suscipit feugiat. Donec condimentum velit sit amet magna fringilla, id aliquam nisl suscipit. Duis vitae dolor eget augue venenatis cursus. Proin eleifend turpis nec turpis imperdiet, sit amet varius sem tempor. Proin at sapien vel nibh tempor pellentesque vitae eu urna.
+O Leitor INR é livre de vírus e ou dispositivos maliciosos.
 
-Vestibulum blandit posuere massa, quis commodo mauris pulvinar faucibus. Nullam consectetur sapien aliquet dolor ornare vulputate. Quisque a dolor quis metus mattis tincidunt. Nam elit lacus, eleifend eget lorem ut, interdum efficitur metus. Proin venenatis tellus vel diam volutpat dapibus in a turpis. Mauris eleifend diam ac eros fermentum, eu malesuada dolor consequat. Donec eget dui rutrum, venenatis nunc id, efficitur justo. Vestibulum tempor posuere quam in venenatis. Phasellus suscipit interdum sem.
+Após a instalação do Leitor INR no computador com sistema Windows © (marca registrada Microsoft Corporation), haverá notificação a cada nova publicação de Boletins Eletrônicos INR e Classificadores INR.
 
-Cras condimentum pellentesque lorem vitae fermentum. Ut dapibus pretium ipsum, non tincidunt nisi tincidunt in. Mauris vestibulum tempor rhoncus. Nullam tempus magna in mi convallis, vel tempor turpis cursus. Nulla justo nisl, bibendum hendrerit tortor sed, malesuada finibus dolor. Integer sed neque sed felis efficitur aliquam sed nec urna. Sed porttitor arcu vel porttitor consectetur. Donec at molestie eros, at maximus quam. Quisque egestas orci enim, et iaculis lacus posuere id. Nunc vehicula sodales finibus. Fusce commodo porttitor leo, nec vehicula lacus euismod a. Cras dolor odio, congue vitae lacinia et, porttitor quis dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc malesuada erat in dolor vestibulum, ac consectetur augue facilisis. Mauris ac eros at tortor semper luctus.
+O Leitor INR, nesta versão, destina-se à notificação boletins distribuídos pelo INR, revelando ao seu usuário a respectiva publicação no Portal INR (https://inrpublicacoes.com.br/site/inicio).
 
-Aliquam ornare nunc vel convallis sodales. Ut volutpat ultricies rutrum. Donec non condimentum augue. Pellentesque a quam augue. Pellentesque vitae vestibulum dolor. Vestibulum pretium commodo ipsum quis vehicula. Etiam eu egestas ex. In commodo vestibulum lectus non efficitur.
+A leitura integral do conteúdo dos boletins se dará pelo acesso ao Portal INR, onde serão solicitados login e senha exclusivos do Assinante INR (os mesmos já utilizados para a obtenção de todo o conteúdo do portal).
+
+Ao acessar o Portal INR, o Assinante INR concorda com os termos de uso vigentes no site.
+
+O aplicativo Leitor INR é propriedade intelectual da Boletins Informativos Ltda, editora das Publicações INR.
+ 
+Em caso de dúvidas, favor enviar e-mail para faleconosco@inr.com.br.
+
+Publicações INR © 2022. Todos os direitos reservados.
