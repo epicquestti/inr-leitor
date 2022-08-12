@@ -7,7 +7,7 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     o[k2] = m[k];
 }));
 exports.__esModule = true;
-exports.verifyBoletins = exports.updatesOpenInBrowser = exports.sendBugReport = exports.removeThisFavorite = exports.openInBrowser = exports.initCarrourcel = exports.goToThisNotifyClick = exports.getVersionDetails = exports.getThisBoletimById = exports.getNotifications = exports.getNotificationList = exports.getNotificationGrid = exports.getFavoriteList = exports.getConfigurations = exports.getClassificadoresList = exports.getClassificadorById = exports.getBoletimList = exports.favoriteThisClassificador = exports.favoriteThisBe = exports.configurationProcess = exports.clientVerifyBoletins = exports.checkDbStatus = exports.changeNotifyCL = exports.changeNotifyBE = exports.allNotificationReaded = void 0;
+exports.verifyBoletins = exports.updatesOpenInBrowser = exports.sendBugReport = exports.removeThisFavorite = exports.openInBrowser = exports.initCarrourcel = exports.goToThisNotifyClick = exports.getVersionDetails = exports.getThisBoletimById = exports.getNotifications = exports.getNotificationList = exports.getNotificationGrid = exports.getFavoriteList = exports.getConfigurations = exports.getClassificadoresList = exports.getClassificadorById = exports.getBoletimList = exports.favoriteThisClassificador = exports.favoriteThisBe = exports.configurationProcess = exports.checkDbStatus = exports.changeNotifyCL = exports.changeNotifyBE = exports.allNotificationReaded = void 0;
 var allNotificationReaded_1 = require("./allNotificationReaded");
 __createBinding(exports, allNotificationReaded_1, "default", "allNotificationReaded");
 var changeNotifyBE_1 = require("./changeNotifyBE");
@@ -16,8 +16,6 @@ var changeNotifyCL_1 = require("./changeNotifyCL");
 __createBinding(exports, changeNotifyCL_1, "default", "changeNotifyCL");
 var checkDbStatus_1 = require("./checkDbStatus");
 __createBinding(exports, checkDbStatus_1, "default", "checkDbStatus");
-var clientVerifyBoletins_1 = require("./clientVerifyBoletins");
-__createBinding(exports, clientVerifyBoletins_1, "default", "clientVerifyBoletins");
 var configurationProcess_1 = require("./configurationProcess");
 __createBinding(exports, configurationProcess_1, "default", "configurationProcess");
 var favoriteThisBe_1 = require("./favoriteThisBe");

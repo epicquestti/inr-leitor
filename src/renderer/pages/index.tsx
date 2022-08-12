@@ -76,7 +76,7 @@ const Home = () => {
       })
 
       window.Main.send("initiCarrourcel")
-      window.Main.send("getFavoriteList")
+      window.Main.send("getFavoriteList", { searchText })
       window.Main.send("getNotificationList")
       setLoading(true)
     } catch (error: any) {
@@ -126,7 +126,7 @@ const Home = () => {
               setLoading(true)
 
               setTimeout(() => {
-                window.Main.send("getFavoriteList", { type: type, searchText })
+                window.Main.send("getFavoriteList", { searchText })
               }, 2000)
             }}
           />

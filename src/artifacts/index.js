@@ -69,6 +69,7 @@ var iconPath = "".concat(path.join(__dirname, "../assets/windowIcon.png"));
 var userDataPath = electron_1.app.getPath("userData");
 var databasePath = path.join(userDataPath, "doc_app-0-3.sqlite");
 var intervalValue = isDev ? 10000 : 600000;
+var appVersion = electron_1.app.getVersion();
 var quiting = false;
 var tray;
 var connection;
@@ -102,7 +103,7 @@ function previneSecondInstance() {
 }
 function createWindow() {
     return __awaiter(this, void 0, void 0, function () {
-        var url, appVersion;
+        var url;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -144,7 +145,6 @@ function createWindow() {
                         window = null;
                         tray && (tray === null || tray === void 0 ? void 0 : tray.destroy());
                     });
-                    appVersion = electron_1.app.getVersion();
                     return [4 /*yield*/, (0, lib_1.initDb)(databasePath)];
                 case 2:
                     connection = _a.sent();
@@ -232,6 +232,20 @@ function registerListeners() {
                         }); });
                     }
                 });
+                electron_1.ipcMain.on("clientVerifyBoletins", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, allProcess.verifyBoletins.handle(connection, null, {
+                                    iconPath: iconPath,
+                                    appVersion: appVersion,
+                                    window: window
+                                })];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
                 // close App
                 electron_1.ipcMain.on("CloseApp", function (e) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {

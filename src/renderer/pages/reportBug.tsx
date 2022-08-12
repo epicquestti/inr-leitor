@@ -149,6 +149,7 @@ const ReportBug = () => {
         email,
         ddd,
         fone,
+        isWhats: isWhatsApp,
         contactWhats,
         contactEmail,
         contactLigacao,
@@ -238,7 +239,7 @@ const ReportBug = () => {
                   variant="outlined"
                   value={email}
                   label="Email"
-                  inputProps={{ maxLength: 10 }}
+                  inputProps={{ maxLength: 100 }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const tmp = [...error]
                     tmp[2] = false

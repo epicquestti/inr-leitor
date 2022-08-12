@@ -18,6 +18,7 @@ const iconPath = `${path.join(__dirname, "../assets/windowIcon.png")}`
 const userDataPath = app.getPath("userData")
 const databasePath = path.join(userDataPath, "doc_app-0-3.sqlite")
 const intervalValue = isDev ? 10000 : 600000
+const appVersion = app.getVersion()
 let quiting = false
 let tray: Tray | null
 let connection: DataSource | null
@@ -90,7 +91,6 @@ async function createWindow() {
     tray && tray?.destroy()
   })
 
-  const appVersion = app.getVersion()
   connection = await initDb(databasePath)
   await allProcess.configurationProcess.handle(connection)
 
@@ -149,6 +149,14 @@ async function registerListeners() {
           await p.handle(connection, e, data)
         })
       }
+    })
+
+    ipcMain.on("clientVerifyBoletins", async e => {
+      await allProcess.verifyBoletins.handle(connection, null, {
+        iconPath,
+        appVersion,
+        window
+      })
     })
 
     // close App

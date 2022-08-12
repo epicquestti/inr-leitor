@@ -5,8 +5,7 @@ import { welcomeProps } from "./props"
 const WelcomeBanner: FC<welcomeProps> = ({ ...props }) => {
   return (
     <PaperImage imgPath={props.image}>
-      <Typography variant="h4">Seja Bem-vindo</Typography>
-      <Typography variant="caption">Seja bem-vindo ao Leitor INR</Typography>
+      <Typography variant="h5">Seja Bem-vindo ao Leitor INR</Typography>
     </PaperImage>
   )
 }

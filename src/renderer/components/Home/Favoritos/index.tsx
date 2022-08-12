@@ -1,21 +1,8 @@
 import { Delete, Search, Visibility } from "@mui/icons-material"
-import {
-  Button,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography
-} from "@mui/material"
+import { Button, Grid, Paper, TextField, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import { FC, KeyboardEvent } from "react"
+import { DataGridV2 } from "../../common"
 import { favoritosProps } from "./props"
 
 const Favoritos: FC<favoritosProps> = ({ ...props }) => {
@@ -63,7 +50,55 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
           </Grid>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-          <TableContainer
+          <DataGridV2
+            loading={props.loading}
+            hasActions
+            selectable
+            sendExtraProp="type"
+            actionTrigger={(
+              id: number,
+              actionName: string,
+              sendExtraProp?: string | undefined
+            ) => {
+              console.log(id)
+              console.log(actionName)
+              console.log(sendExtraProp)
+            }}
+            groupActionTrigger={(list: number[], actionName: string) => {
+              console.log(list, actionName)
+            }}
+            groupActions={[
+              {
+                icon: "delete",
+                name: "deleteFavorito",
+                text: "Remover favorito"
+              }
+            ]}
+            actions={[
+              {
+                text: "Visualizar",
+                name: "lookThis",
+                icon: <Visibility />
+              },
+              {
+                text: "Remover",
+                name: "lookThis",
+                icon: <Delete />
+              }
+            ]}
+            data={props.list}
+            headers={[
+              {
+                text: "Título",
+                attrName: "titulo"
+              },
+              {
+                text: "Data",
+                attrName: "data"
+              }
+            ]}
+          />
+          {/* <TableContainer
             sx={{
               maxHeight: 260,
               marginBottom: 3
@@ -74,7 +109,7 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                 <TableRow>
                   <TableCell>Título</TableCell>
                   <TableCell align="center">Data</TableCell>
-                  <TableCell align="center">Vizualizar</TableCell>
+                  <TableCell align="center">Vizualisar</TableCell>
                   <TableCell align="center">Remover</TableCell>
                 </TableRow>
               </TableHead>
@@ -148,49 +183,9 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                     </TableCell>
                   </TableRow>
                 )}
-                {/* {props.list && props.list.length > 0 ? (
-                  props.list.map((item: any) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.titulo}</TableCell>
-                      <TableCell align="center">
-                        {new Date(item.data).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={() => {
-                            if (item.type === "C")
-                              router.push(`/classificador/${item.id}`)
-                            else if (item.type === "B")
-                              router.push(`/boletim/${item.id}`)
-                          }}
-                        >
-                          <Visibility />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={() => {
-                            window.Main.send("removeThisFavorite", {
-                              id: item.id,
-                              type: item.type
-                            })
-                          }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell align="center" colSpan={4}>
-                      Clique em buscar para ver seus Favoritos
-                    </TableCell>
-                  </TableRow>
-                )} */}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> */}
         </Grid>
       </Grid>
     </Paper>

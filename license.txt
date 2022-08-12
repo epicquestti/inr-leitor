@@ -1,5 +1,5 @@
 Leitor INR
-Versão atual: 0.2.63
+Versão atual: 0.2.64
  
 Leitor INR é um aplicativo para distribuição livre e gratuita destinada a Assinantes INR.
 
