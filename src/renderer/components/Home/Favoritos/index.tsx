@@ -1,13 +1,10 @@
 import { Delete, Search, Visibility } from "@mui/icons-material"
 import { Button, Grid, Paper, TextField, Typography } from "@mui/material"
-import { useRouter } from "next/router"
 import { FC, KeyboardEvent } from "react"
 import { DataGridV2 } from "../../common"
 import { favoritosProps } from "./props"
 
 const Favoritos: FC<favoritosProps> = ({ ...props }) => {
-  const router = useRouter()
-
   return (
     <Paper sx={{ p: 3, background: "#ECEFF1" }}>
       <Grid container spacing={5}>
@@ -29,8 +26,8 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                     props.searchFavorite && props.searchFavorite()
                 }}
                 variant="outlined"
-                placeholder="Localize o boletim ou classificador digitando seu número ou data"
-                label="Localizar boletim ou classificador marcado como favorito."
+                placeholder="Localize o boletim ou classificador digitando seu número (ex: 11162) ou data (ex: dd/mm/aaaa)"
+                label="Localize o boletim ou classificador digitando seu número (ex: 11162) ou data (ex: dd/mm/aaaa)"
               />
             </Grid>
 
@@ -44,7 +41,7 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                   props.searchFavorite && props.searchFavorite()
                 }}
               >
-                Localizar
+                Buscar
               </Button>
             </Grid>
           </Grid>
@@ -76,13 +73,13 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
             ]}
             actions={[
               {
-                text: "Visualizar",
+                text: "Visualisar",
                 name: "lookThis",
                 icon: <Visibility />
               },
               {
                 text: "Remover",
-                name: "lookThis",
+                name: "deleteThis",
                 icon: <Delete />
               }
             ]}
@@ -90,102 +87,18 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
             headers={[
               {
                 text: "Título",
-                attrName: "titulo"
+                attrName: "titulo",
+                align: "left",
+                width: 8
               },
               {
                 text: "Data",
-                attrName: "data"
+                attrName: "data",
+                align: "center",
+                width: 2
               }
             ]}
           />
-          {/* <TableContainer
-            sx={{
-              maxHeight: 260,
-              marginBottom: 3
-            }}
-          >
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Título</TableCell>
-                  <TableCell align="center">Data</TableCell>
-                  <TableCell align="center">Vizualisar</TableCell>
-                  <TableCell align="center">Remover</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {props.loading ? (
-                  <TableRow
-                    sx={{
-                      height: "13.8vw"
-                    }}
-                  >
-                    <TableCell align="center" colSpan={4}>
-                      <Grid container spacing={3}>
-                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                          <Typography variant="body1">
-                            Carregando... Por favor aguarde.
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                          <Grid
-                            container
-                            spacing={3}
-                            justifyContent="center"
-                            alignContent="center"
-                            alignItems="center"
-                          >
-                            <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
-                              <LinearProgress />
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </TableCell>
-                  </TableRow>
-                ) : props.list && props.list.length > 0 ? (
-                  props.list.map((item: any) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.titulo}</TableCell>
-                      <TableCell align="center">
-                        {new Date(item.data).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={() => {
-                            if (item.type === "C")
-                              router.push(`/classificador/${item.id}`)
-                            else if (item.type === "B")
-                              router.push(`/boletim/${item.id}`)
-                          }}
-                        >
-                          <Visibility />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton
-                          onClick={() => {
-                            window.Main.send("removeThisFavorite", {
-                              id: item.id,
-                              type: item.type
-                            })
-                          }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell align="center" colSpan={4}>
-                      Clique em buscar para ver seus Favoritos
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer> */}
         </Grid>
       </Grid>
     </Paper>

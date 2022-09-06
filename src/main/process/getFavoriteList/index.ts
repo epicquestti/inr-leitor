@@ -68,7 +68,7 @@ export default {
               id: boletins[i].id,
               titulo: boletins[i].title,
               idFavorito: boletins[i].id,
-              data: boletins[i].publicadoEm.toString(),
+              data: boletins[i].publicadoEm.toLocaleDateString(),
               type: "B"
             })
           }
@@ -81,7 +81,7 @@ export default {
               id: classificadores[ii].id,
               titulo: classificadores[ii].title,
               idFavorito: classificadores[ii].id,
-              data: classificadores[ii].publicadoEm.toString(),
+              data: classificadores[ii].publicadoEm.toLocaleDateString(),
               type: "C"
             })
           }

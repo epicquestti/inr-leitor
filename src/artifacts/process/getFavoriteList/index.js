@@ -100,7 +100,7 @@ exports["default"] = {
                                 id: boletins_1[i].id,
                                 titulo: boletins_1[i].title,
                                 idFavorito: boletins_1[i].id,
-                                data: boletins_1[i].publicadoEm.toString(),
+                                data: boletins_1[i].publicadoEm.toLocaleDateString(),
                                 type: "B"
                             });
                         }
@@ -115,7 +115,7 @@ exports["default"] = {
                                 id: classificadores_1[ii].id,
                                 titulo: classificadores_1[ii].title,
                                 idFavorito: classificadores_1[ii].id,
-                                data: classificadores_1[ii].publicadoEm.toString(),
+                                data: classificadores_1[ii].publicadoEm.toLocaleDateString(),
                                 type: "C"
                             });
                         }

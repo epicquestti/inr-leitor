@@ -2,8 +2,22 @@ import { Icon, IconButton } from "@mui/material"
 import { headerList } from "../types"
 import { DefaultHeader } from "./DefaultHeader"
 import { LeftCheckHeader } from "./LeftCheckHeader"
-import { LeftHeader } from "./LeftHeader"
 import { RigthHeader } from "./RigthHeader"
+
+enum sizeColumn {
+  C1 = "8.33%",
+  C2 = "16.66%",
+  C3 = "25%",
+  C4 = "33.33%",
+  C5 = "41.66%",
+  C6 = "50%",
+  C7 = "58.33%",
+  C8 = "66.66%",
+  C9 = "74.99%",
+  C10 = "83.33%",
+  C11 = "91.66%",
+  C12 = "100%"
+}
 
 export const HeaderList = (
   list?: headerList[],
@@ -22,45 +36,92 @@ export const HeaderList = (
         case start:
           if (isSelectable) {
             res.push(
-              <LeftCheckHeader key={`header-first-item`}>
+              <LeftCheckHeader
+                key={`header-first-item`}
+                sx={{ width: "8.33%" }}
+                align="center"
+              >
                 <IconButton size="small" onClick={headerOnChange}>
-                  <Icon>more_horiz</Icon>
+                  <Icon sx={{ color: "white" }}>more_horiz</Icon>
                 </IconButton>
               </LeftCheckHeader>
             )
-
-            res.push(
-              <DefaultHeader key={`header-${i}-item`}>
-                {list[i].text}
-              </DefaultHeader>
-            )
-          } else {
-            res.push(
-              <LeftHeader key={`header-${i}-item`}>{list[i].text}</LeftHeader>
-            )
           }
+
+          res.push(
+            <DefaultHeader
+              sx={{
+                width:
+                  list[i].width !== undefined
+                    ? sizeColumn[
+                        `${"C" + list[i].width}` as keyof typeof sizeColumn
+                      ]
+                    : "auto"
+              }}
+              key={`header-${i}-item`}
+              align={list[i].align ? list[i].align : "left"}
+            >
+              {list[i].text}
+            </DefaultHeader>
+          )
+
           break
 
         case end:
           if (hasAction) {
             res.push(
-              <DefaultHeader key={`header-${i}-item`}>
+              <DefaultHeader
+                sx={{
+                  width:
+                    list[i].width !== undefined
+                      ? sizeColumn[
+                          `${"C" + list[i].width}` as keyof typeof sizeColumn
+                        ]
+                      : "auto"
+                }}
+                key={`header-${i}-item`}
+                align={list[i].align ? list[i].align : "left"}
+              >
                 {list[i].text}
               </DefaultHeader>
             )
             res.push(
-              <RigthHeader key={`header-last-item`} sx={{ width: "3%" }} />
+              <RigthHeader key={`header-last-item`} sx={{ width: "8.33%" }} />
             )
           } else {
             res.push(
-              <RigthHeader key={`header-${i}-item`}>{list[i].text}</RigthHeader>
+              <RigthHeader
+                sx={{
+                  width:
+                    list[i].width !== undefined
+                      ? sizeColumn[
+                          `${"C" + list[i].width}` as keyof typeof sizeColumn
+                        ]
+                      : "auto"
+                }}
+                key={`header-${i}-item`}
+                align={list[i].align ? list[i].align : "left"}
+              >
+                {list[i].text}
+              </RigthHeader>
             )
           }
           break
 
         default:
           res.push(
-            <DefaultHeader key={`header-${i}-item`}>
+            <DefaultHeader
+              sx={{
+                width:
+                  list[i].width !== undefined
+                    ? sizeColumn[
+                        `${"C" + list[i].width}` as keyof typeof sizeColumn
+                      ]
+                    : "auto"
+              }}
+              key={`header-${i}-item`}
+              align={list[i].align ? list[i].align : "left"}
+            >
               {list[i].text}
             </DefaultHeader>
           )

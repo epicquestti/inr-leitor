@@ -10,6 +10,20 @@ import {
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state"
 import { ChangeEvent } from "react"
 import { actionList, headerList } from "../types"
+enum sizeColumn {
+  C1 = "8.33%",
+  C2 = "16.66%",
+  C3 = "25%",
+  C4 = "33.33%",
+  C5 = "41.66%",
+  C6 = "50%",
+  C7 = "58.33%",
+  C8 = "66.66%",
+  C9 = "74.99%",
+  C10 = "83.33%",
+  C11 = "91.66%",
+  C12 = "100%"
+}
 export const TableNode = (
   listNode: any,
   headers: headerList[],
@@ -24,8 +38,9 @@ export const TableNode = (
   if (isSelectable) {
     response.push(
       <TableCell
-        sx={{ border: "none" }}
+        sx={{ width: "8.33333%", border: "none" }}
         key={`grid-node-key-${listNode.id}-checkbox-firts`}
+        align="center"
       >
         <Checkbox
           size="small"
@@ -35,10 +50,6 @@ export const TableNode = (
             checked: boolean
           ) => {
             event.currentTarget.dataset.checkedState = checked ? "S" : "N"
-
-            const list = Array.from(
-              document.getElementsByName("checkBox-intendify")
-            )
           }}
           inputProps={
             {
@@ -54,8 +65,17 @@ export const TableNode = (
   for (let i = 0; i < headers.length; i++) {
     response.push(
       <TableCell
-        sx={{ border: "none" }}
+        sx={{
+          border: "none",
+          width:
+            headers[i].width !== undefined
+              ? sizeColumn[
+                  `${"C" + headers[i].width}` as keyof typeof sizeColumn
+                ]
+              : "auto"
+        }}
         key={`grid-node-key-${listNode.id}-${i}`}
+        align={headers[i].align ? headers[i].align : "left"}
       >
         {listNode[headers[i].attrName as keyof typeof listNode]}
       </TableCell>
@@ -65,8 +85,9 @@ export const TableNode = (
   if (hasActions) {
     response.push(
       <TableCell
-        sx={{ border: "none" }}
+        sx={{ border: "none", width: "8.33333%" }}
         key={`grid-node-key-${listNode.id}-checkbox-last`}
+        align="center"
       >
         <PopupState variant="popover" popupId="demo-popup-menu">
           {popupState => (

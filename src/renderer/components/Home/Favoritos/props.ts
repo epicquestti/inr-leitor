@@ -6,7 +6,7 @@ export type favoritosProps = {
   loading?: boolean
   searchText: string
   setSearchText?: (value: string) => void
-  setType?: (value: string) => void
+
   searchFavorite?: () => void
   stopLoading?: () => void
 }

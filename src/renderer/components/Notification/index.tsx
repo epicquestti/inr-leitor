@@ -31,26 +31,38 @@ const Notification: FC<notificationProps> = () => {
   }
 
   useEffect(() => {
-    window.Main.on("reloadNotifies", (data: any) => {
-      if (data.success) {
-        if (data.contents) {
-          setCl(data.contents.notifyClassificador)
-          setBe(data.contents.notifyBoletim)
+    window.Main.on(
+      "reloadNotifies",
+      (data: {
+        success: boolean
+        contents: { notifyClassificador: boolean; notifyBoletim: boolean }
+      }) => {
+        if (data.success) {
+          if (data.contents) {
+            setCl(data.contents.notifyClassificador)
+            setBe(data.contents.notifyBoletim)
+          }
         }
       }
-    })
-    window.Main.on("responseNotifyBE", (data: any) => {
-      if (data.success) {
-        setMsg(data.msg)
-        setOpen(true)
+    )
+    window.Main.on(
+      "responseNotifyBE",
+      (data: { success: boolean; msg: string }) => {
+        if (data.success) {
+          setMsg(data.msg)
+          setOpen(true)
+        }
       }
-    })
-    window.Main.on("responseNotifyCL", (data: any) => {
-      if (data.success) {
-        setMsg(data.msg)
-        setOpen(true)
+    )
+    window.Main.on(
+      "responseNotifyCL",
+      (data: { success: boolean; msg: string }) => {
+        if (data.success) {
+          setMsg(data.msg)
+          setOpen(true)
+        }
       }
-    })
+    )
 
     window.Main.send("getNotifications", {})
   }, [])

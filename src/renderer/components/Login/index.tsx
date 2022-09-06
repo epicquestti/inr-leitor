@@ -19,7 +19,7 @@ import {
 } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React, { FC, useState } from "react"
+import { FC, useState } from "react"
 import HomeInr from "../../public/assets/common/Logo-reading-inr.jpg"
 import { loginBoxProps } from "./props"
 
@@ -59,11 +59,7 @@ const Login: FC<loginBoxProps> = () => {
             fullWidth
             id="email"
             label="email"
-            // disabled={loading}
             variant="outlined"
-            // onChange={setEmailValue}
-            // value={email}
-            // error={errorControl[0]}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -80,10 +76,6 @@ const Login: FC<loginBoxProps> = () => {
             id="pass"
             label="senha"
             variant="outlined"
-            // disabled={loading}
-            // onChange={setPasswordValue}
-            // error={errorControl[1]}
-            // value={password}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -122,8 +114,6 @@ const Login: FC<loginBoxProps> = () => {
                 <Checkbox
                   icon={<BookmarkBorder />}
                   checkedIcon={<Bookmark />}
-                  // onChange={setKeepConnectedValue}
-                  // checked={keepConnected}
                 />
               }
               label="Manter conectado"

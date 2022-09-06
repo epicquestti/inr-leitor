@@ -162,7 +162,7 @@ const MyNotificationList = () => {
                   onClick={allReaded}
                   fullWidth
                 >
-                  Marcas todos como lidos
+                  Marcar todos como lidos
                 </Button>
               </Grid>
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>

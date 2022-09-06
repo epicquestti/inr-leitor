@@ -45,7 +45,7 @@ const QHGrid: FC<qhGridProps> = ({ ...props }) => {
                 >
                   <CircularProgress size="20px" />
                   <Typography sx={{ ml: 3 }} variant="caption">
-                    carregando...
+                    Aguarde...
                   </Typography>
                 </Box>
               </TableCell>
@@ -201,7 +201,7 @@ const QHGrid: FC<qhGridProps> = ({ ...props }) => {
                     </Box>
                     <Box>
                       <Typography textAlign="center" variant="h6">
-                        Aguarde
+                        Aguarde...
                       </Typography>
                     </Box>
                   </Box>
@@ -276,7 +276,7 @@ const QHGrid: FC<qhGridProps> = ({ ...props }) => {
               props.pagination.onRowsPerPageChange(parseInt(e.target.value, 10))
           }}
           onPageChange={(
-            event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent> | null,
+            _: MouseEvent<HTMLButtonElement, globalThis.MouseEvent> | null,
             page: number
           ) => {
             props.pagination?.onPageChange &&

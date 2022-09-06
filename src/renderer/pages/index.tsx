@@ -23,7 +23,6 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState("")
-  const [type, setType] = useState("B")
 
   const handleClose = () => {
     setOpenSnack(false)
@@ -116,9 +115,6 @@ const Home = () => {
             loading={loading}
             searchText={searchText}
             setSearchText={(value: string) => setSearchText(value)}
-            setType={(value: string) => {
-              setType(value)
-            }}
             stopLoading={() => {
               setLoading(false)
             }}
