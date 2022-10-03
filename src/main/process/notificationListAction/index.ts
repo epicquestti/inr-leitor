@@ -3,7 +3,7 @@ import { DataSource } from "typeorm"
 import { Notificacoes } from "../../Entities"
 
 export default {
-  name: "allNotificationReaded",
+  name: "notificationListAction",
   processListener: true,
   handle: async (
     db: DataSource,
@@ -12,12 +12,17 @@ export default {
   ): Promise<void> => {
     try {
       if (!event) throw new Error("event is needed.")
+      if (!data) throw new Error("data is needed.")
 
       const notificacoesQueryBuilder = await db
         .getRepository(Notificacoes)
         .createQueryBuilder("notificacoes")
 
-      await notificacoesQueryBuilder.update().set({ readed: true }).execute()
+      await notificacoesQueryBuilder
+        .update()
+        .set({ readed: data.readState })
+        .whereInIds(data.list as number[])
+        .execute()
 
       const notificationGrid = await notificacoesQueryBuilder
         .orderBy("notificacoes.createdAt", "DESC")
@@ -27,6 +32,8 @@ export default {
         id: number
         text: string
         read: string
+        icon: string
+        iconColor: string
         createdAt: string
       }[] = []
 
@@ -34,7 +41,9 @@ export default {
         responseArray.push({
           id: notificationGrid[i].id,
           text: notificationGrid[i].text,
-          read: notificationGrid[i].readed ? "S" : "N",
+          read: notificationGrid[i].readed ? "Lido" : "Ñ. Lido",
+          icon: notificationGrid[i].readed ? "beenhere" : "bookmark_border",
+          iconColor: notificationGrid[i].readed ? "#81C784" : "#FFE082",
           createdAt: notificationGrid[i].createdAt.toLocaleDateString()
         })
       }

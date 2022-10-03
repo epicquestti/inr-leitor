@@ -1,10 +1,17 @@
 import { ReactNode } from "react"
+export type customType = {
+  isBox?: boolean
+  isIcon?: boolean
+  icon?: string
+  color?: string
+}
 
 export type headerList = {
   text?: string
   attrName?: string
   align?: "center" | "inherit" | "justify" | "left" | "right"
   width?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+  custom?: customType
 }
 
 export type actionList = {
@@ -49,4 +56,9 @@ export type qhGridProps = {
     onRowsPerPageChange?: (rowsPerPAge: number) => void
     onPageChange?: (page: number) => void
   }
+}
+
+export type goupActionReturnModel = {
+  id: number
+  [key: string]: any
 }

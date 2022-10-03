@@ -86,7 +86,9 @@ exports["default"] = {
                             title: item.title,
                             criadoEm: item.criadoEm.toLocaleDateString(),
                             publicadoEm: item.publicadoEm.toLocaleDateString(),
-                            read: item.read
+                            read: item.read === "S" ? "Lido" : "Ñ. Lido",
+                            icon: item.read === "S" ? "beenhere" : "bookmark_border",
+                            iconColor: item.read === "S" ? "#81C784" : "#FFE082"
                         };
                     });
                     event.sender.send("realodClassificadoresList", {

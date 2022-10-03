@@ -63,7 +63,9 @@ exports["default"] = {
                         responseArray.push({
                             id: notificationList[i].id,
                             text: notificationList[i].text,
-                            read: notificationList[i].readed ? "S" : "N",
+                            read: notificationList[i].readed ? "Lido" : "Ñ. Lido",
+                            icon: notificationList[i].readed ? "beenhere" : "bookmark_border",
+                            iconColor: notificationList[i].readed ? "#81C784" : "#FFE082",
                             createdAt: notificationList[i].createdAt.toLocaleDateString()
                         });
                     }

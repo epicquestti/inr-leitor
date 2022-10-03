@@ -1,7 +1,7 @@
 {
   "name": "inr-app",
   "productName": "Leitor INR",
-  "version": "0.2.64",
+  "version": "0.2.65",
   "description": "Aplicativo Voltado para o cliente INR onde o mesmo pode acompanhar as publicações INR em tempo real.",
   "main": "src/artifacts/index.js",
   "scripts": {
@@ -48,7 +48,11 @@
       "oneClick": false,
       "artifactName": "Instalador_Leitor_INR_${version}.${ext}",
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "Leitor INR"
+      "shortcutName": "Leitor INR",
+      "deleteAppDataOnUninstall": true,
+      "installerLanguages": "pt_BR",
+      "language": "1046",
+      "multiLanguageInstaller": true
     },
     "icon": "src/assets/icon.png",
     "copyright": "Copyright © 2022 ${author}"

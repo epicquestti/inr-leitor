@@ -73,34 +73,27 @@ var appVersion = electron_1.app.getVersion();
 var quiting = false;
 var tray;
 var connection;
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
+electron_1.powerSaveBlocker.start("prevent-app-suspension");
+var gotTheLock = electron_1.app.requestSingleInstanceLock();
+if (!gotTheLock) {
+    electron_1.app.exit();
+}
+else {
+    electron_1.app.on("second-instance", function () {
+        if (window) {
+            if (window.isMinimized())
+                window.restore();
+            window.show();
+            // window.focus()
+        }
+    });
+}
 var processList = Object.values(allProcess).map(function (process) { return ({
     name: process.name,
     handle: process.handle,
     processListener: process.processListener
 }); });
-electron_1.powerSaveBlocker.start("prevent-app-suspension");
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
-function previneSecondInstance() {
-    return __awaiter(this, void 0, void 0, function () {
-        var gotTheLock;
-        return __generator(this, function (_a) {
-            gotTheLock = electron_1.app.requestSingleInstanceLock();
-            if (!gotTheLock) {
-                electron_1.app.quit();
-            }
-            else {
-                electron_1.app.on("second-instance", function () {
-                    if (window) {
-                        if (window.isMinimized())
-                            window.restore();
-                        window.focus();
-                    }
-                });
-            }
-            return [2 /*return*/];
-        });
-    });
-}
 function createWindow() {
     return __awaiter(this, void 0, void 0, function () {
         var url;
@@ -158,7 +151,7 @@ function createWindow() {
                                         iconPath: iconPath,
                                         appVersion: appVersion,
                                         window: window
-                                    })];
+                                    }, false)];
                                 case 1:
                                     _a.sent();
                                     return [2 /*return*/];
@@ -235,11 +228,11 @@ function registerListeners() {
                 electron_1.ipcMain.on("clientVerifyBoletins", function (e) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, allProcess.verifyBoletins.handle(connection, null, {
+                            case 0: return [4 /*yield*/, allProcess.verifyBoletins.handle(connection, e, {
                                     iconPath: iconPath,
                                     appVersion: appVersion,
                                     window: window
-                                })];
+                                }, true)];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];
@@ -289,7 +282,6 @@ electron_1.app.setLoginItemSettings({
 });
 electron_1.app
     .on("ready", createWindow)
-    .on("second-instance", previneSecondInstance)
     .on("window-all-closed", AllWindowClosed)
     .on("activate", activateApp)
     .whenReady()

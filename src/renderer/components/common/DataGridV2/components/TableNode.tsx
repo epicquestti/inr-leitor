@@ -1,10 +1,13 @@
 import { MoreVert } from "@mui/icons-material"
 import {
+  Box,
   Checkbox,
+  Icon,
   IconButton,
   Menu,
   MenuItem,
   TableCell,
+  Tooltip,
   Typography
 } from "@mui/material"
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state"
@@ -63,23 +66,83 @@ export const TableNode = (
   }
 
   for (let i = 0; i < headers.length; i++) {
-    response.push(
-      <TableCell
-        sx={{
-          border: "none",
-          width:
-            headers[i].width !== undefined
-              ? sizeColumn[
-                  `${"C" + headers[i].width}` as keyof typeof sizeColumn
-                ]
-              : "auto"
-        }}
-        key={`grid-node-key-${listNode.id}-${i}`}
-        align={headers[i].align ? headers[i].align : "left"}
-      >
-        {listNode[headers[i].attrName as keyof typeof listNode]}
-      </TableCell>
-    )
+    if (!headers[i].custom) {
+      response.push(
+        <TableCell
+          sx={{
+            border: "none",
+            width:
+              headers[i].width !== undefined
+                ? sizeColumn[
+                    `${"C" + headers[i].width}` as keyof typeof sizeColumn
+                  ]
+                : "auto"
+          }}
+          key={`grid-node-key-${listNode.id}-${i}`}
+          align={headers[i].align ? headers[i].align : "left"}
+        >
+          {listNode[headers[i].attrName as keyof typeof listNode]}
+        </TableCell>
+      )
+    } else {
+      if (headers[i].custom?.isBox) {
+        response.push(
+          <TableCell
+            sx={{
+              border: "none",
+              width:
+                headers[i].width !== undefined
+                  ? sizeColumn[
+                      `${"C" + headers[i].width}` as keyof typeof sizeColumn
+                    ]
+                  : "auto"
+            }}
+            key={`grid-node-key-${listNode.id}-${i}`}
+            align={headers[i].align ? headers[i].align : "left"}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: headers[i].custom?.color,
+                borderRadius: "6px",
+                p: 1
+              }}
+            >
+              <Typography sx={{ fontSize: 10 }}>
+                {listNode[headers[i].attrName as keyof typeof listNode]}
+              </Typography>
+            </Box>
+          </TableCell>
+        )
+      }
+
+      if (headers[i].custom?.isIcon) {
+        response.push(
+          <TableCell
+            sx={{
+              border: "none",
+              width:
+                headers[i].width !== undefined
+                  ? sizeColumn[
+                      `${"C" + headers[i].width}` as keyof typeof sizeColumn
+                    ]
+                  : "auto"
+            }}
+            key={`grid-node-key-${listNode.id}-${i}`}
+            align={headers[i].align ? headers[i].align : "left"}
+          >
+            <Tooltip
+              title={listNode[headers[i].attrName as keyof typeof listNode]}
+            >
+              <Icon sx={{ color: listNode.iconColor }}>{listNode.icon}</Icon>
+            </Tooltip>
+          </TableCell>
+        )
+      }
+    }
   }
 
   if (hasActions) {

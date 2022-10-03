@@ -22,28 +22,28 @@ const appVersion = app.getVersion()
 let quiting = false
 let tray: Tray | null
 let connection: DataSource | null
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true"
+powerSaveBlocker.start("prevent-app-suspension")
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.exit()
+} else {
+  app.on("second-instance", () => {
+    if (window) {
+      if (window.isMinimized()) window.restore()
+      window.show()
+      // window.focus()
+    }
+  })
+}
+
 const processList = Object.values(allProcess).map(process => ({
   name: process.name,
   handle: process.handle,
   processListener: process.processListener
 }))
-powerSaveBlocker.start("prevent-app-suspension")
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true"
-
-async function previneSecondInstance() {
-  const gotTheLock = app.requestSingleInstanceLock()
-
-  if (!gotTheLock) {
-    app.quit()
-  } else {
-    app.on("second-instance", () => {
-      if (window) {
-        if (window.isMinimized()) window.restore()
-        window.focus()
-      }
-    })
-  }
-}
 
 async function createWindow() {
   await prepareNext("src/renderer")
@@ -95,11 +95,16 @@ async function createWindow() {
   await allProcess.configurationProcess.handle(connection)
 
   setInterval(async () => {
-    await allProcess.verifyBoletins.handle(connection, null, {
-      iconPath,
-      appVersion,
-      window
-    })
+    await allProcess.verifyBoletins.handle(
+      connection,
+      null,
+      {
+        iconPath,
+        appVersion,
+        window
+      },
+      false
+    )
   }, intervalValue)
 }
 
@@ -152,11 +157,16 @@ async function registerListeners() {
     })
 
     ipcMain.on("clientVerifyBoletins", async e => {
-      await allProcess.verifyBoletins.handle(connection, null, {
-        iconPath,
-        appVersion,
-        window
-      })
+      await allProcess.verifyBoletins.handle(
+        connection,
+        e,
+        {
+          iconPath,
+          appVersion,
+          window
+        },
+        true
+      )
     })
 
     // close App
@@ -189,7 +199,6 @@ app.setLoginItemSettings({
 
 app
   .on("ready", createWindow)
-  .on("second-instance", previneSecondInstance)
   .on("window-all-closed", AllWindowClosed)
   .on("activate", activateApp)
   .whenReady()

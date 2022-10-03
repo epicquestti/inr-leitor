@@ -1,22 +1,22 @@
 Leitor INR
-VersÃ£o atual:Â 0.2.64
-Â 
-Leitor INR Ã© um aplicativo para distribuiÃ§Ã£o livre e gratuita destinada aÂ AssinantesÂ INR.
+Versão atual: 0.2.65
+ 
+Leitor INR é um aplicativo para distribuição livre e gratuita destinada a Assinantes INR.
 
-OÂ Leitor INR nÃ£o coleta quaisquer dados pessoais do seu usuÃ¡rio.
+O Leitor INR não coleta quaisquer dados pessoais do seu usuário.
 
-OÂ Leitor INRÂ Ã© livre de vÃ­rus e ou dispositivos maliciosos.
+O Leitor INR é livre de vírus e ou dispositivos maliciosos.
 
-ApÃ³s a instalaÃ§Ã£o doÂ Leitor INR no computador com sistema WindowsÂ Â© (marca registrada Microsoft Corporation), haverÃ¡ notificaÃ§Ã£o a cada nova publicaÃ§Ã£o deÂ Boletins EletrÃ´nicos INR e Classificadores INR.
+Após a instalação do Leitor INR no computador com sistema Windows © (marca registrada Microsoft Corporation), haverá notificação a cada nova publicação de Boletins Eletrônicos INR e Classificadores INR.
 
-OÂ Leitor INR, nesta versÃ£o,Â destina-se Ã  notificaÃ§Ã£o boletins distribuÃ­dos peloÂ INR, revelando ao seu usuÃ¡rio a respectiva publicaÃ§Ã£o no Portal INR (https://inrpublicacoes.com.br/site/inicio).
+O Leitor INR, nesta versão, destina-se à notificação boletins distribuídos pelo INR, revelando ao seu usuário a respectiva publicação no Portal INR (https://inrpublicacoes.com.br/site/inicio).
 
-A leitura integral do conteÃºdo dos boletins se darÃ¡ pelo acesso ao Portal INR, onde serÃ£o solicitadosÂ loginÂ e senha exclusivos doÂ AssinanteÂ INR (os mesmos jÃ¡ utilizados para a obtenÃ§Ã£o de todo o conteÃºdo do portal).
+A leitura integral do conteúdo dos boletins se dará pelo acesso ao Portal INR, onde serão solicitados login e senha exclusivos do Assinante INR (os mesmos já utilizados para a obtenção de todo o conteúdo do portal).
 
-Ao acessar o Portal INR, o AssinanteÂ INR concorda com os termos de uso vigentes no site.
+Ao acessar o Portal INR, o Assinante INR concorda com os termos de uso vigentes no site.
 
-O aplicativoÂ Leitor INR Ã© propriedade intelectual da Boletins Informativos Ltda, editora das PublicaÃ§Ãµes INR.
-Â 
-Em caso de dÃºvidas, favor enviar e-mail paraÂ faleconosco@inr.com.br.
+O aplicativo Leitor INR é propriedade intelectual da Boletins Informativos Ltda, editora das Publicações INR.
+ 
+Em caso de dúvidas, favor enviar e-mail para faleconosco@inr.com.br.
 
-PublicaÃ§Ãµes INR Â©Â 2022. Todos os direitos reservados.
+Publicações INR © 2022. Todos os direitos reservados.

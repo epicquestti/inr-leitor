@@ -14,7 +14,8 @@ export default {
   handle: async (
     db: DataSource,
     event?: IpcMainEvent,
-    data?: any
+    data?: any,
+    notifyAppUser?: boolean
   ): Promise<void> => {
     try {
       const lastPublishes = await GET(app.api.inr.lastPublishes)
@@ -38,6 +39,15 @@ export default {
             appConfig,
             lastPublishes
           )
+
+          if (notifyAppUser) {
+            if (!beProcessResult.notify && !clProcessResult.notify) {
+              event.sender.send("clientVerifyBoletinsResponse", {
+                message:
+                  "Não existem novos boletins. Aguarde, em bereve novos conteúdos estarão disponíveis"
+              })
+            }
+          }
 
           await processTray(
             data.iconPath,

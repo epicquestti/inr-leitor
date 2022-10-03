@@ -1,4 +1,10 @@
-import { Close as CloseIcon, Search } from "@mui/icons-material"
+import {
+  Close as CloseIcon,
+  DoneAll,
+  RemoveDone,
+  Search,
+  Visibility
+} from "@mui/icons-material"
 import {
   Button,
   Grid,
@@ -10,7 +16,7 @@ import {
 } from "@mui/material"
 import { useRouter } from "next/router"
 import { FC, KeyboardEvent, useEffect, useState } from "react"
-import DataGrid from "../common/DataGrid"
+import { DataGridV2 } from "../common"
 import { classificadoresProps, IBoletim } from "./props"
 
 const BoletimList: FC<classificadoresProps> = () => {
@@ -20,7 +26,7 @@ const BoletimList: FC<classificadoresProps> = () => {
   const [text, setText] = useState("")
   const [page, setPage] = useState(0)
   const [count, setCount] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>("")
 
@@ -28,6 +34,7 @@ const BoletimList: FC<classificadoresProps> = () => {
     if (!router.isReady) return
 
     setLoading(true)
+
     window.Main.on("realodBoletimList", (data: any) => {
       if (data) {
         setCount(data.count)
@@ -37,6 +44,15 @@ const BoletimList: FC<classificadoresProps> = () => {
       setTimeout(() => {
         setLoading(false)
       }, 1500)
+    })
+
+    window.Main.on("boletimSendToTarget", (data: any) => {
+      if (data.success) {
+        router.push(`/boletim/${data.data}`)
+      } else {
+        setMsg(data.message)
+        setOpenSnack(true)
+      }
     })
 
     window.Main.send("getBoletimList", { text, limit: rowsPerPage, page })
@@ -72,6 +88,67 @@ const BoletimList: FC<classificadoresProps> = () => {
   const handleRowsPerPage = async (value: number) => {
     setRowsPerPage(value)
     window.Main.send("getBoletimList", { text, limit: value, page })
+  }
+
+  const actionSelect = (id: number, actionName: string) => {
+    try {
+      setLoading(true)
+      window.Main.send("boletimActionSelect", {
+        id,
+        actionName,
+        page,
+        limit: rowsPerPage,
+        text
+      })
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+    }
+  }
+
+  const groupActionSelect = (list: number[], actionName: string) => {
+    try {
+      setLoading(true)
+      switch (actionName) {
+        case "readAll":
+          window.Main.send("boletimAllAction", {
+            readState: "S",
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "unreadAll":
+          window.Main.send("boletimAllAction", {
+            readState: "N",
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "readThisList":
+          window.Main.send("boletimListAction", {
+            readState: "S",
+            list,
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "unreadThisList":
+          window.Main.send("boletimListAction", {
+            readState: "N",
+            list,
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+      }
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+    }
   }
 
   const action = (
@@ -130,44 +207,82 @@ const BoletimList: FC<classificadoresProps> = () => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-          <DataGrid
-            gridHeaders={[
-              { field: "title", headerName: "Título" },
-              {
-                field: "read",
-                headerName: "Estado",
-                tag: {
-                  trueCase: {
-                    text: "Lido",
-                    color: "#81C784",
-                    colorText: "#000000"
-                  },
-                  falseCase: {
-                    text: "Ñ Lido",
-                    color: "#FFCC80",
-                    colorText: "#000000"
-                  }
-                }
-              },
-              { field: "criadoEm", headerName: "Data" }
-            ]}
-            count={count}
-            gridData={boletimList}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPage}
+          <DataGridV2
             loading={loading}
-            onSelectedRow={id => {
-              try {
-                setLoading(true)
-                router.push(`/boletim/${id}`)
-              } catch (error: any) {
-                setMsg(error.message)
-                setOpenSnack(true)
-              } finally {
-                setLoading(false)
+            hasActions
+            selectable
+            actionTrigger={actionSelect}
+            groupActionTrigger={groupActionSelect}
+            actions={[
+              {
+                text: "visualizar",
+                name: "lookThis",
+                icon: <Visibility />
+              },
+              {
+                text: "Marcar como lido",
+                name: "readThis",
+                icon: <DoneAll />
+              },
+              {
+                text: "Marcar como Não lido",
+                name: "unreadThis",
+                icon: <RemoveDone />
               }
+            ]}
+            groupActions={[
+              {
+                icon: "done_all",
+                name: "readAll",
+                text: "Marcar todos como lidos."
+              },
+              {
+                icon: "remove_done",
+                name: "unreadAll",
+                text: "Marcar todos como não lidos."
+              },
+              {
+                icon: "done",
+                name: "readThisList",
+                text: "Marcar item(ns) selecionado(s) como lido(s)."
+              },
+              {
+                icon: "remove",
+                name: "unreadThisList",
+                text: "Marcar item(ns) selecionado(s) como não lido(s)."
+              }
+            ]}
+            data={boletimList}
+            headers={[
+              {
+                text: "Título",
+                attrName: "title",
+                align: "left",
+                width: 6
+              },
+              {
+                text: "Estado",
+                attrName: "read",
+                align: "center",
+                custom: {
+                  isIcon: true
+                },
+                width: 2
+              },
+              {
+                text: "Data",
+                attrName: "criadoEm",
+                align: "center",
+                width: 2
+              }
+            ]}
+            pagination={{
+              count: count,
+              page: page,
+              rowsPerPage: rowsPerPage,
+              onPageChange: handlePageChange,
+              onRowsPerPageChange: handleRowsPerPage,
+              rowsPerPageOptions: [10, 20, 30, 40, 50, 100]
             }}
           />
         </Grid>

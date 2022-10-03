@@ -1,4 +1,10 @@
-import { Close as CloseIcon, Search } from "@mui/icons-material"
+import {
+  Close as CloseIcon,
+  DoneAll,
+  RemoveDone,
+  Search,
+  Visibility
+} from "@mui/icons-material"
 import {
   Button,
   Grid,
@@ -10,7 +16,7 @@ import {
 } from "@mui/material"
 import { useRouter } from "next/router"
 import { FC, useEffect, useState } from "react"
-import DataGrid from "../common/DataGrid"
+import { DataGridV2 } from "../common"
 import { classificadoresProps } from "./props"
 
 const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
@@ -19,7 +25,7 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
   const [classificadorList, setClassificadorList] = useState([])
   const [text, setText] = useState("")
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const [count, setCount] = useState<number>(0)
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>("")
@@ -37,6 +43,15 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
       setTimeout(() => {
         setLoading(false)
       }, 1000)
+    })
+
+    window.Main.on("classificadorSendToTarget", (data: any) => {
+      if (data.success) {
+        router.push(`/classificador/${data.data}`)
+      } else {
+        setMsg(data.message)
+        setOpenSnack(true)
+      }
     })
 
     window.Main.send("getClassificadoresList", {
@@ -75,6 +90,67 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
 
   const handleClose = () => {
     setOpenSnack(false)
+  }
+
+  const actionSelect = (id: number, actionName: string) => {
+    try {
+      setLoading(true)
+      window.Main.send("classificadorActionSelect", {
+        id,
+        actionName,
+        page,
+        limit: rowsPerPage,
+        text
+      })
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+    }
+  }
+
+  const groupActionSelect = (list: number[], actionName: string) => {
+    try {
+      setLoading(true)
+      switch (actionName) {
+        case "readAll":
+          window.Main.send("classificadorAllAction", {
+            readState: "S",
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "unreadAll":
+          window.Main.send("classificadorAllAction", {
+            readState: "N",
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "readThisList":
+          window.Main.send("classificadorListAction", {
+            readState: "S",
+            list,
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+        case "unreadThisList":
+          window.Main.send("classificadorListAction", {
+            readState: "N",
+            list,
+            text,
+            page,
+            limit: rowsPerPage
+          })
+          break
+      }
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+    }
   }
 
   const action = (
@@ -129,7 +205,85 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
           </Button>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-          <DataGrid
+          <DataGridV2
+            loading={!!(loading || props.loading)}
+            hasActions
+            selectable
+            actionTrigger={actionSelect}
+            groupActionTrigger={groupActionSelect}
+            actions={[
+              {
+                text: "visualizar",
+                name: "lookThis",
+                icon: <Visibility />
+              },
+              {
+                text: "Marcar como lido",
+                name: "readThis",
+                icon: <DoneAll />
+              },
+              {
+                text: "Marcar como Não lido",
+                name: "unreadThis",
+                icon: <RemoveDone />
+              }
+            ]}
+            groupActions={[
+              {
+                icon: "done_all",
+                name: "readAll",
+                text: "Marcar todos como lidos."
+              },
+              {
+                icon: "remove_done",
+                name: "unreadAll",
+                text: "Marcar todos como não lidos."
+              },
+              {
+                icon: "done",
+                name: "readThisList",
+                text: "Marcar item(ns) selecionado(s) como lido(s)."
+              },
+              {
+                icon: "remove",
+                name: "unreadThisList",
+                text: "Marcar item(ns) selecionado(s) como não lido(s)."
+              }
+            ]}
+            data={classificadorList}
+            headers={[
+              {
+                text: "Título",
+                attrName: "title",
+                align: "left",
+                width: 6
+              },
+              {
+                text: "Estado",
+                attrName: "read",
+                align: "center",
+                custom: {
+                  isIcon: true
+                },
+                width: 2
+              },
+              {
+                text: "Data",
+                attrName: "criadoEm",
+                align: "center",
+                width: 2
+              }
+            ]}
+            pagination={{
+              count: count,
+              page: page,
+              rowsPerPage: rowsPerPage,
+              onPageChange: handlePageChange,
+              onRowsPerPageChange: handleRowsPerPage,
+              rowsPerPageOptions: [10, 20, 30, 40, 50, 100]
+            }}
+          />
+          {/* <DataGrid
             gridHeaders={[
               { field: "title", headerName: "Título" },
               {
@@ -168,7 +322,7 @@ const ClassificadoresList: FC<classificadoresProps> = ({ ...props }) => {
                 setLoading(false)
               }
             }}
-          />
+          /> */}
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <Grid container spacing={3} justifyContent="flex-end">

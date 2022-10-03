@@ -188,15 +188,22 @@ const ReportBug = () => {
                   voltar
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <Typography sx={{ fontSize: 14 }}>
+                  Campos com (*) são obrigatórios
+                </Typography>
+              </Grid>
               <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
                 <FormControl fullWidth>
-                  <InputLabel id="select-tratamento-id">Tratamento</InputLabel>
+                  <InputLabel id="select-tratamento-id">
+                    Tratamento *
+                  </InputLabel>
                   <Select
                     error={error[0]}
                     disabled={loading}
                     labelId="select-tratamento-id"
                     fullWidth
-                    label="Tratamento"
+                    label="Tratamento *"
                     value={tratamento}
                     onChange={(event: SelectChangeEvent<string>) => {
                       const tmp = [...error]
@@ -220,7 +227,7 @@ const ReportBug = () => {
                   disabled={loading}
                   fullWidth
                   variant="outlined"
-                  label="Nome (completo)"
+                  label="Nome (completo) *"
                   inputProps={{ maxLength: 100 }}
                   value={nome}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -238,7 +245,7 @@ const ReportBug = () => {
                   fullWidth
                   variant="outlined"
                   value={email}
-                  label="Email"
+                  label="Email *"
                   inputProps={{ maxLength: 100 }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const tmp = [...error]
@@ -250,13 +257,13 @@ const ReportBug = () => {
               </Grid>
               <Grid item xs={12} sm={12} md={1} lg={1} xl={1}>
                 <FormControl fullWidth>
-                  <InputLabel id="select-tratamento-id">DDD</InputLabel>
+                  <InputLabel id="select-tratamento-id">DDD *</InputLabel>
                   <Select
                     error={error[3]}
                     disabled={loading}
                     labelId="select-tratamento-id"
                     fullWidth
-                    label="DDD"
+                    label="DDD *"
                     value={ddd}
                     onChange={(event: SelectChangeEvent<number>) => {
                       const tmp = [...error]
@@ -343,7 +350,7 @@ const ReportBug = () => {
                   fullWidth
                   variant="outlined"
                   value={fone}
-                  label="Telefone"
+                  label="Telefone *"
                   inputProps={{ maxLength: 10 }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const tmp = [...error]
@@ -403,7 +410,7 @@ const ReportBug = () => {
                   <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <Typography variant="subtitle2">
                       Caso haja necessidade de contato, como você gostaria de
-                      ser contactado ?
+                      ser contactado ? *
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
@@ -497,7 +504,7 @@ const ReportBug = () => {
                   minRows={10}
                   maxRows={80}
                   variant="outlined"
-                  label="Descreva o bug"
+                  label="Descreva o bug *"
                   value={descricao}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const tmp = [...error]

@@ -49,7 +49,7 @@ var processTray_1 = __importDefault(require("./processTray"));
 exports["default"] = {
     name: "verifyBoletins",
     processListener: false,
-    handle: function (db, event, data) { return __awaiter(void 0, void 0, void 0, function () {
+    handle: function (db, event, data, notifyAppUser) { return __awaiter(void 0, void 0, void 0, function () {
         var lastPublishes, appConfig, versionProcessResult, beProcessResult, clProcessResult, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -72,6 +72,13 @@ exports["default"] = {
                     return [4 /*yield*/, (0, processClassificadores_1["default"])(db, appConfig, lastPublishes)];
                 case 5:
                     clProcessResult = _a.sent();
+                    if (notifyAppUser) {
+                        if (!beProcessResult.notify && !clProcessResult.notify) {
+                            event.sender.send("clientVerifyBoletinsResponse", {
+                                message: "Não existem novos boletins. Aguarde, em bereve novos conteúdos estarão disponíveis"
+                            });
+                        }
+                    }
                     return [4 /*yield*/, (0, processTray_1["default"])(data.iconPath, beProcessResult, clProcessResult, data.window)];
                 case 6:
                     _a.sent();

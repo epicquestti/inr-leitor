@@ -35,14 +35,18 @@ export default {
         const boletimRepository = await db.getRepository(Boletim)
 
         const be: number[] = []
+        const beFavId: number[] = []
         const cl: number[] = []
+        const clFavId: number[] = []
 
         for (let i = 0; i < allFavListResponse.length; i++) {
           if (allFavListResponse[i].tipoFavorito === "B") {
             be.push(allFavListResponse[i].idFavorito)
+            beFavId.push(allFavListResponse[i].id)
           }
           if (allFavListResponse[i].tipoFavorito === "C") {
             cl.push(allFavListResponse[i].idFavorito)
+            clFavId.push(allFavListResponse[i].id)
           }
         }
 
@@ -65,7 +69,7 @@ export default {
 
           if (hasBe > -1) {
             res.push({
-              id: boletins[i].id,
+              id: beFavId[hasBe],
               titulo: boletins[i].title,
               idFavorito: boletins[i].id,
               data: boletins[i].publicadoEm.toLocaleDateString(),
@@ -78,7 +82,7 @@ export default {
           const hasCl = cl.findIndex(item => item === classificadores[ii].id)
           if (hasCl > -1) {
             res.push({
-              id: classificadores[ii].id,
+              id: clFavId[hasCl],
               titulo: classificadores[ii].title,
               idFavorito: classificadores[ii].id,
               data: classificadores[ii].publicadoEm.toLocaleDateString(),

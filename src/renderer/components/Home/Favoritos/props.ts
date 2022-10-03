@@ -2,11 +2,6 @@ import { ReactNode } from "react"
 
 export type favoritosProps = {
   children?: ReactNode
-  list?: any[]
   loading?: boolean
-  searchText: string
-  setSearchText?: (value: string) => void
-
-  searchFavorite?: () => void
-  stopLoading?: () => void
+  loadingView?: (loading: boolean) => void
 }

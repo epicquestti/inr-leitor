@@ -19,8 +19,6 @@ type cItensType = {
 const Home = () => {
   const [carrourcelItens, setCarrourcelItens] = useState<cItensType[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [list, setList] = useState([])
-  const [searchText, setSearchText] = useState("")
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState("")
 
@@ -62,20 +60,7 @@ const Home = () => {
         setLoading(false)
       })
 
-      window.Main.on("reloadFavoritos", (data: any) => {
-        setList(data)
-        setLoading(false)
-      })
-
-      window.Main.on("reloadRemoveThisFavorite", (data: any) => {
-        setOpenSnack(true)
-        setMsg(data.msg)
-        setList(data.response)
-        setLoading(false)
-      })
-
       window.Main.send("initiCarrourcel")
-      window.Main.send("getFavoriteList", { searchText })
       window.Main.send("getNotificationList")
       setLoading(true)
     } catch (error: any) {
@@ -111,19 +96,9 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <Favoritos
-            list={list}
             loading={loading}
-            searchText={searchText}
-            setSearchText={(value: string) => setSearchText(value)}
-            stopLoading={() => {
-              setLoading(false)
-            }}
-            searchFavorite={() => {
-              setLoading(true)
-
-              setTimeout(() => {
-                window.Main.send("getFavoriteList", { searchText })
-              }, 2000)
+            loadingView={(loading: boolean) => {
+              setLoading(loading)
             }}
           />
         </Grid>

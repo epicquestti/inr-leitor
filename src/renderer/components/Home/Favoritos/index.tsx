@@ -1,10 +1,64 @@
 import { Delete, Search, Visibility } from "@mui/icons-material"
-import { Button, Grid, Paper, TextField, Typography } from "@mui/material"
-import { FC, KeyboardEvent } from "react"
+import {
+  Button,
+  Grid,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography
+} from "@mui/material"
+import { useRouter } from "next/router"
+import { FC, KeyboardEvent, useEffect, useState } from "react"
 import { DataGridV2 } from "../../common"
 import { favoritosProps } from "./props"
 
 const Favoritos: FC<favoritosProps> = ({ ...props }) => {
+  const router = useRouter()
+  const [searchText, setSearchText] = useState<string>("")
+  const [msg, setMsg] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
+  const [openSnack, setOpenSnack] = useState<boolean>(false)
+  const [list, setList] = useState([])
+  const init = () => {
+    try {
+      setLoading(true)
+
+      window.Main.on("resolveAction", (data: any) => {
+        if (data.action === "goTo") {
+          router.push(data.url)
+        }
+
+        if (data.action === "msg") {
+          setMsg(data.message)
+          setOpenSnack(true)
+          setLoading(false)
+        }
+
+        window.Main.send("getFavoriteList", { searchText })
+      })
+
+      window.Main.on("reloadFavoritos", (data: any) => {
+        setList(data)
+        setLoading(false)
+        props.loadingView && props.loadingView(false)
+      })
+
+      window.Main.send("getFavoriteList", { searchText })
+    } catch (error: any) {
+      setMsg(error.message)
+      setOpenSnack(true)
+      setLoading(false)
+    }
+  }
+
+  const handleClose = () => {
+    setOpenSnack(false)
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
   return (
     <Paper sx={{ p: 3, background: "#ECEFF1" }}>
       <Grid container spacing={5}>
@@ -15,15 +69,17 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
           <Grid container spacing={5} alignItems="center">
             <Grid item xs={12} sm={12} md={10} lg={10} xl={10}>
               <TextField
-                disabled={props.loading}
+                disabled={loading}
                 fullWidth
-                value={props.searchText}
-                onChange={e =>
-                  props.setSearchText && props.setSearchText(e.target.value)
-                }
+                value={searchText}
+                onChange={e => setSearchText(e.target.value)}
                 onKeyPress={(e: KeyboardEvent<HTMLDivElement>) => {
-                  if (e.key === "Enter")
-                    props.searchFavorite && props.searchFavorite()
+                  if (e.key === "Enter") {
+                    setLoading(true)
+                    setTimeout(() => {
+                      window.Main.send("getFavoriteList", { searchText })
+                    }, 2000)
+                  }
                 }}
                 variant="outlined"
                 placeholder="Localize o boletim ou classificador digitando seu número (ex: 11162) ou data (ex: dd/mm/aaaa)"
@@ -34,11 +90,14 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
             <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
               <Button
                 fullWidth
-                disabled={props.loading}
+                disabled={loading}
                 variant="contained"
                 endIcon={<Search />}
                 onClick={() => {
-                  props.searchFavorite && props.searchFavorite()
+                  setLoading(true)
+                  setTimeout(() => {
+                    window.Main.send("getFavoriteList", { searchText })
+                  }, 2000)
                 }}
               >
                 Buscar
@@ -48,7 +107,7 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <DataGridV2
-            loading={props.loading}
+            loading={loading}
             hasActions
             selectable
             sendExtraProp="type"
@@ -57,12 +116,25 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
               actionName: string,
               sendExtraProp?: string | undefined
             ) => {
-              console.log(id)
-              console.log(actionName)
-              console.log(sendExtraProp)
+              props.loadingView && props.loadingView(true)
+              if (actionName === "lookThis") {
+                window.Main.send("favoriteAction", {
+                  id,
+                  type: sendExtraProp,
+                  action: "select"
+                })
+              } else if (actionName === "deleteThis") {
+                window.Main.send("favoriteAction", {
+                  id,
+                  type: sendExtraProp,
+                  action: "delete"
+                })
+              }
             }}
             groupActionTrigger={(list: number[], actionName: string) => {
-              console.log(list, actionName)
+              props.loadingView && props.loadingView(true)
+              if (actionName === "deleteFavorito")
+                window.Main.send("removeListFavorite", list)
             }}
             groupActions={[
               {
@@ -83,7 +155,7 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
                 icon: <Delete />
               }
             ]}
-            data={props.list}
+            data={list}
             headers={[
               {
                 text: "Título",
@@ -101,6 +173,12 @@ const Favoritos: FC<favoritosProps> = ({ ...props }) => {
           />
         </Grid>
       </Grid>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={msg}
+      />
     </Paper>
   )
 }

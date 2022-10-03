@@ -108,6 +108,7 @@ const QHGrid: FC<qhGridProps> = ({ ...props }) => {
                                   continue
                                 }
                               }
+
                               props.groupActionTrigger &&
                                 props.groupActionTrigger(res, gpItem.name)
                               setShowOptions(false)
@@ -158,6 +159,23 @@ const QHGrid: FC<qhGridProps> = ({ ...props }) => {
                         </Tooltip>
                       )
                     )}
+
+                  {props.groupActions && (
+                    <Tooltip
+                      key={`group-actions-identifier-close-actions-bar-button`}
+                      title="Fechar"
+                      placement="top"
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setShowOptions(false)
+                        }}
+                      >
+                        <Icon>close</Icon>
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </Box>
               </TableCell>
             ) : (

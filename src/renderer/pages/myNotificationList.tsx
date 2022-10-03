@@ -1,4 +1,9 @@
-import { Close as CloseIcon } from "@mui/icons-material"
+import {
+  Close as CloseIcon,
+  DoneAll,
+  RemoveDone,
+  Visibility
+} from "@mui/icons-material"
 import {
   Button,
   Dialog,
@@ -14,7 +19,8 @@ import {
 import { Box } from "@mui/system"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { DataGrid, View } from "../components"
+import { View } from "../components"
+import { DataGridV2 } from "../components/common"
 
 const MyNotificationList = () => {
   const router = useRouter()
@@ -66,7 +72,23 @@ const MyNotificationList = () => {
             setTimeout(() => {
               setOpenAguarde(false)
               setLoading(false)
-            }, 2000)
+            }, 500)
+          } else {
+            setMsg(data.message)
+            setOpenSnack(true)
+            setOpenAguarde(false)
+            setLoading(false)
+          }
+        })
+
+        window.Main.on("notificationSendToTarget", (data: any) => {
+          if (data.success) {
+            if (data.data.type === "B") {
+              router.push(`/boletim/${data.data.relatedDocumentId}`)
+            }
+            if (data.data.type === "C") {
+              router.push(`/classificador/${data.data.relatedDocumentId}`)
+            }
           } else {
             setMsg(data.message)
             setOpenSnack(true)
@@ -97,11 +119,10 @@ const MyNotificationList = () => {
     setOpenAguarde(false)
   }
 
-  const allReaded = () => {
+  const actionSelect = (id: number, actionName: string) => {
     try {
-      setOpenAguarde(true)
       setLoading(true)
-      window.Main.send("allNotificationReaded")
+      window.Main.send("notificationActionSelect", { id, actionName })
     } catch (error: any) {
       setMsg(error.message)
       setOpenSnack(true)
@@ -110,11 +131,23 @@ const MyNotificationList = () => {
     }
   }
 
-  const goTo = (id: number) => {
+  const groupActionSelect = (list: number[], actionName: string) => {
     try {
-      setOpenAguarde(true)
       setLoading(true)
-      window.Main.send("goToThisNotifyClick", { id })
+      switch (actionName) {
+        case "readAll":
+          window.Main.send("notificationAllAction", { readState: true })
+          break
+        case "unreadAll":
+          window.Main.send("notificationAllAction", { readState: false })
+          break
+        case "readThisList":
+          window.Main.send("notificationListAction", { readState: true, list })
+          break
+        case "unreadThisList":
+          window.Main.send("notificationListAction", { readState: false, list })
+          break
+      }
     } catch (error: any) {
       setMsg(error.message)
       setOpenSnack(true)
@@ -133,6 +166,7 @@ const MyNotificationList = () => {
       <CloseIcon fontSize="small" />
     </IconButton>
   )
+
   return (
     <View loading={false}>
       <Grid container spacing={3}>
@@ -142,7 +176,8 @@ const MyNotificationList = () => {
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <Typography variant="h5">Notificações recebidas.</Typography>
               </Grid>
-              <Grid item xs={12} sm={12} md={8} lg={8} xl={8}></Grid>
+              <Grid item xs={12} sm={12} md={10} lg={10} xl={10}></Grid>
+
               <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
                 <Button
                   disabled={loading}
@@ -155,42 +190,77 @@ const MyNotificationList = () => {
                   Voltar
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
-                <Button
-                  disabled={loading}
-                  variant="contained"
-                  onClick={allReaded}
-                  fullWidth
-                >
-                  Marcar todos como lidos
-                </Button>
-              </Grid>
+
               <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                <DataGrid
-                  gridHeaders={[
-                    { field: "text", headerName: "Conteúdo." },
+                <DataGridV2
+                  loading={loading}
+                  hasActions
+                  selectable
+                  data={notificacaoLista}
+                  actionTrigger={actionSelect}
+                  groupActionTrigger={groupActionSelect}
+                  actions={[
                     {
-                      field: "read",
-                      headerName: "status",
-                      tag: {
-                        trueCase: {
-                          text: "Lido",
-                          color: "#81C784",
-                          colorText: "#000000"
-                        },
-                        falseCase: {
-                          text: "Ñ Lido",
-                          color: "#FFCC80",
-                          colorText: "#000000"
-                        }
+                      text: "visualizar",
+                      name: "lookThis",
+                      icon: <Visibility />
+                    },
+                    {
+                      text: "Marcar como lido",
+                      name: "readThis",
+                      icon: <DoneAll />
+                    },
+                    {
+                      text: "Marcar como Não lido",
+                      name: "unreadThis",
+                      icon: <RemoveDone />
+                    }
+                  ]}
+                  headers={[
+                    {
+                      text: "Conteúdo",
+                      attrName: "text",
+                      align: "left",
+                      width: 8
+                    },
+                    {
+                      text: "status",
+                      attrName: "read",
+                      align: "center",
+                      width: 1,
+                      custom: {
+                        isIcon: true
                       }
                     },
-                    { field: "createdAt", headerName: "Data" }
+                    {
+                      text: "Data",
+                      attrName: "createdAt",
+                      align: "center",
+                      width: 1
+                    }
                   ]}
-                  gridData={notificacaoLista}
-                  loading={loading}
-                  hidePagination
-                  onSelectedRow={goTo}
+                  groupActions={[
+                    {
+                      icon: "done_all",
+                      name: "readAll",
+                      text: "Marcar todos como lidos."
+                    },
+                    {
+                      icon: "remove_done",
+                      name: "unreadAll",
+                      text: "Marcar todos como não lidos."
+                    },
+                    {
+                      icon: "done",
+                      name: "readThisList",
+                      text: "Marcar item(ns) selecionado(s) como lido(s)."
+                    },
+                    {
+                      icon: "remove",
+                      name: "unreadThisList",
+                      text: "Marcar item(ns) selecionado(s) como não lido(s)."
+                    }
+                  ]}
                 />
               </Grid>
             </Grid>

@@ -42,7 +42,7 @@ exports["default"] = {
     name: "getFavoriteList",
     processListener: true,
     handle: function (db, event, data) { return __awaiter(void 0, void 0, void 0, function () {
-        var res, allFavListRepository, allFavListResponse, classificadorRepository, boletimRepository, be, cl, i, boletins_1, classificadores_1, _loop_1, i, _loop_2, ii, error_1;
+        var res, allFavListRepository, allFavListResponse, classificadorRepository, boletimRepository, be, beFavId, cl, clFavId, i, boletins_1, classificadores_1, _loop_1, i, _loop_2, ii, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -68,13 +68,17 @@ exports["default"] = {
                 case 4:
                     boletimRepository = _a.sent();
                     be = [];
+                    beFavId = [];
                     cl = [];
+                    clFavId = [];
                     for (i = 0; i < allFavListResponse.length; i++) {
                         if (allFavListResponse[i].tipoFavorito === "B") {
                             be.push(allFavListResponse[i].idFavorito);
+                            beFavId.push(allFavListResponse[i].id);
                         }
                         if (allFavListResponse[i].tipoFavorito === "C") {
                             cl.push(allFavListResponse[i].idFavorito);
+                            clFavId.push(allFavListResponse[i].id);
                         }
                     }
                     return [4 /*yield*/, boletimRepository.find({
@@ -97,7 +101,7 @@ exports["default"] = {
                         var hasBe = be.findIndex(function (item) { return item === boletins_1[i].id; });
                         if (hasBe > -1) {
                             res.push({
-                                id: boletins_1[i].id,
+                                id: beFavId[hasBe],
                                 titulo: boletins_1[i].title,
                                 idFavorito: boletins_1[i].id,
                                 data: boletins_1[i].publicadoEm.toLocaleDateString(),
@@ -112,7 +116,7 @@ exports["default"] = {
                         var hasCl = cl.findIndex(function (item) { return item === classificadores_1[ii].id; });
                         if (hasCl > -1) {
                             res.push({
-                                id: classificadores_1[ii].id,
+                                id: clFavId[hasCl],
                                 titulo: classificadores_1[ii].title,
                                 idFavorito: classificadores_1[ii].id,
                                 data: classificadores_1[ii].publicadoEm.toLocaleDateString(),
