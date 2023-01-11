@@ -31,6 +31,8 @@ export default {
       }
 
       const response = await POST(config.api.inr.sendReport, body)
+      console.log(response)
+
       if (response.success) {
         event.sender.send("reportBugReload", { success: true })
       } else throw new Error(response.message)

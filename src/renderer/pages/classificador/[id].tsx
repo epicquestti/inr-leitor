@@ -11,6 +11,8 @@ const ReadingClassificador = () => {
   const [title, setTitle] = useState("")
   const [data, setData] = useState("")
   const [spUrl, setSpUrl] = useState("")
+  const [spAcuUrl, setSpAcuUrl] = useState("")
+  const [spAcuTitle, setSpAcuTitle] = useState("")
   const [prUrl, setPrUrl] = useState("")
   const [rsUrl, setRsUrl] = useState("")
 
@@ -26,11 +28,18 @@ const ReadingClassificador = () => {
   useEffect(() => {
     try {
       setLoading(true)
+
       window.Main.on("relaodClassificador", (data: any) => {
         setTitle(data.title)
+
         setData(new Date(data.publicadoEm).toLocaleDateString())
 
         for (let i = 0; i < data.contents.length; i++) {
+          if (data.contents[i].tipo === "SP-ACU") {
+            setSpAcuTitle(data.contents[i].text)
+            setSpAcuUrl(data.contents[i].url)
+          }
+
           if (data.contents[i].tipo === "SP") {
             setSpUrl(data.contents[i].url)
           } else if (data.contents[i].tipo === "SP-NHP") {
@@ -109,6 +118,8 @@ const ReadingClassificador = () => {
             id={idParsed}
             title={title}
             data={data}
+            spAcuTitle={spAcuTitle}
+            spAcuUrl={spAcuUrl}
             spUlr={spUrl}
             prUlr={prUrl}
             rsUlr={rsUrl}

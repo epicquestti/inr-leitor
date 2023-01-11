@@ -31,6 +31,10 @@ var ClassificadorContents = /** @class */ (function () {
         (0, typeorm_1.Column)({ nullable: true }),
         __metadata("design:type", String)
     ], ClassificadorContents.prototype, "url");
+    __decorate([
+        (0, typeorm_1.Column)({ nullable: true }),
+        __metadata("design:type", String)
+    ], ClassificadorContents.prototype, "text");
     ClassificadorContents = __decorate([
         (0, typeorm_1.Entity)("ClassificadorContents")
     ], ClassificadorContents);

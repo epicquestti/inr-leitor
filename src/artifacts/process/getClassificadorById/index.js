@@ -77,7 +77,8 @@ exports["default"] = {
                             select: {
                                 id: true,
                                 tipo: true,
-                                url: true
+                                url: true,
+                                text: true
                             }
                         })];
                 case 4:
@@ -93,7 +94,8 @@ exports["default"] = {
                         contents: clContents.map(function (item) { return ({
                             id: item.id,
                             tipo: item.tipo,
-                            url: item.url
+                            url: item.url,
+                            text: item.text
                         }); })
                     };
                     cl.read = "S";

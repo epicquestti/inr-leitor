@@ -43,7 +43,7 @@ var app_1 = __importDefault(require("../../config/app"));
 var Entities_1 = require("../../Entities");
 var lib_1 = require("../../lib");
 exports["default"] = {
-    name: "consfigurationProcess",
+    name: "configurationProcess",
     processListener: false,
     handle: function (db, event, data) { return __awaiter(void 0, void 0, void 0, function () {
         var consfigRepository, configQueryBuilder, configResult, instaName, lastPublications, newConfig, error_1;

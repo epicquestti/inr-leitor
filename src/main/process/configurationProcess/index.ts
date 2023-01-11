@@ -5,7 +5,7 @@ import { Configuracoes } from "../../Entities"
 import { GET, stringGenerator } from "../../lib"
 
 export default {
-  name: "consfigurationProcess",
+  name: "configurationProcess",
   processListener: false,
   handle: async (
     db: DataSource,

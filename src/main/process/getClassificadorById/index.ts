@@ -42,7 +42,8 @@ export default {
         select: {
           id: true,
           tipo: true,
-          url: true
+          url: true,
+          text: true
         }
       })
 
@@ -57,7 +58,8 @@ export default {
         contents: clContents.map(item => ({
           id: item.id,
           tipo: item.tipo,
-          url: item.url
+          url: item.url,
+          text: item.text
         }))
       }
 

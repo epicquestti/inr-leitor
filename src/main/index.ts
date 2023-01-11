@@ -92,6 +92,7 @@ async function createWindow() {
   })
 
   connection = await initDb(databasePath)
+
   await allProcess.configurationProcess.handle(connection)
 
   setInterval(async () => {

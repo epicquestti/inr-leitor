@@ -113,6 +113,20 @@ const Classificador: FC<classificadoProps> = ({ ...props }) => {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+            {props.spAcuUrl && props.spAcuTitle && (
+              <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
+                <a
+                  onClick={() => {
+                    openInBrowser(props.spAcuUrl)
+                  }}
+                  style={{
+                    cursor: "pointer"
+                  }}
+                >
+                  <strong>{props.spAcuTitle}</strong>
+                </a>
+              </Typography>
+            )}
             <Typography variant="subtitle1" sx={{ color: "#0093d8" }}>
               <a
                 onClick={() => {

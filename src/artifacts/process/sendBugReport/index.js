@@ -78,6 +78,7 @@ exports["default"] = {
                     return [4 /*yield*/, (0, lib_1.POST)(app_1["default"].api.inr.sendReport, body)];
                 case 3:
                     response = _a.sent();
+                    console.log(response);
                     if (response.success) {
                         event.sender.send("reportBugReload", { success: true });
                     }

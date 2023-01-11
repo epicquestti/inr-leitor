@@ -72,7 +72,8 @@ const processClassificadores = async (
                   {
                     classificador: newNormalClass.identifiers[0].id,
                     tipo: CL.contents[d].tipo,
-                    url: CL.contents[d].url
+                    url: CL.contents[d].url,
+                    text: CL.contents[d].text
                   }
                 ])
                 .execute()

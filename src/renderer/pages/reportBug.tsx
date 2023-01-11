@@ -1,4 +1,3 @@
-import { WhatsApp } from "@mui/icons-material"
 import {
   Box,
   Button,
@@ -31,19 +30,13 @@ const ReportBug = () => {
   const [ddd, setDdd] = useState<number>(0)
   const [fone, setFone] = useState<string>("")
   const [descricao, setDescricao] = useState<string>("")
-  const [isWhatsApp, setIsWhatsApp] = useState<boolean>(false)
-  const [contactWhats, setContactWhats] = useState<boolean>(false)
   const [contactEmail, setContactEmail] = useState<boolean>(false)
   const [contactLigacao, setContactLigacao] = useState<boolean>(false)
   const [contactNo, setContactNo] = useState<boolean>(false)
-
   const [loading, setLoading] = useState<boolean>(false)
-  const [blockWhatsContact, setBlockWhatsContact] = useState<boolean>(true)
   const [blockAllContacts, setBlockAllContacts] = useState<boolean>(false)
-
   const [reportBugShow, setReportBugShow] = useState<boolean>(false)
   const [reportBugSuccess, setReportBugSuccess] = useState<boolean>(false)
-
   const [openSnack, setOpenSnack] = useState<boolean>(false)
   const [msg, setMsg] = useState("")
   const [error, setError] = useState<boolean[]>([
@@ -129,9 +122,9 @@ const ReportBug = () => {
       }
 
       if (!contactNo) {
-        if (!contactWhats && !contactEmail && !contactLigacao) {
+        if (!contactEmail && !contactLigacao) {
           throw new Error(
-            `Favor selecione um meio de contato ou então "não quero ser contactado". caso whatsapp seja uma de suas opções selecione a opção "O número esta no whatsapp" para habilitar a opção de contato por whatsapp.`
+            `Favor selecione um meio de contato ou então "não quero ser contactado".`
           )
         }
       }
@@ -149,8 +142,6 @@ const ReportBug = () => {
         email,
         ddd,
         fone,
-        isWhats: isWhatsApp,
-        contactWhats,
         contactEmail,
         contactLigacao,
         contactNo,
@@ -360,52 +351,13 @@ const ReportBug = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    height: "180px",
-                    background: "#CFD8DC",
-                    borderRadius: "4px",
-                    padding: 2
-                  }}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        disabled={blockAllContacts || loading}
-                        checked={isWhatsApp}
-                        onChange={(
-                          _: ChangeEvent<HTMLInputElement>,
-                          checked: boolean
-                        ) => {
-                          setIsWhatsApp(checked)
 
-                          if (!checked) {
-                            setContactWhats(false)
-                            setBlockWhatsContact(true)
-                          } else {
-                            setBlockWhatsContact(false)
-                          }
-                        }}
-                        icon={<WhatsApp />}
-                        checkedIcon={<WhatsApp sx={{ color: "green" }} />}
-                      />
-                    }
-                    labelPlacement="top"
-                    label="O número esta no whatsapp ?"
-                  />
-                </Box>
-              </Grid>
               <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
                 <Grid
                   container
                   spacing={3}
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="left"
                 >
                   <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <Typography variant="subtitle2">
@@ -413,25 +365,7 @@ const ReportBug = () => {
                       ser contactado ? *
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={
-                            blockWhatsContact || blockAllContacts || loading
-                          }
-                          checked={contactWhats}
-                          onChange={(
-                            _: ChangeEvent<HTMLInputElement>,
-                            checked: boolean
-                          ) => {
-                            setContactWhats(checked)
-                          }}
-                        />
-                      }
-                      label="Whatsapp"
-                    />
-                  </Grid>
+
                   <Grid item xs={12} sm={12} md={2} lg={2} xl={2}>
                     <FormControlLabel
                       control={
@@ -449,6 +383,7 @@ const ReportBug = () => {
                       label="email"
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
                     <FormControlLabel
                       control={
@@ -466,6 +401,7 @@ const ReportBug = () => {
                       label="Ligação telefônica"
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={12} md={5} lg={5} xl={5}>
                     <FormControlLabel
                       control={
@@ -480,12 +416,9 @@ const ReportBug = () => {
                             if (checked) {
                               setContactLigacao(false)
                               setContactEmail(false)
-                              setContactWhats(false)
-                              setIsWhatsApp(false)
                               setBlockAllContacts(true)
                             } else {
                               setBlockAllContacts(false)
-                              setBlockWhatsContact(true)
                             }
                           }}
                         />

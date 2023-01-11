@@ -1,5 +1,5 @@
 import { Box, Grid, Paper } from "@mui/material"
-import React, { FC } from "react"
+import { FC } from "react"
 import { paperImageProps } from "./props"
 
 const PaperImage: FC<paperImageProps> = ({ ...props }) => {

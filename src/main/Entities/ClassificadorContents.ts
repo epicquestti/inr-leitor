@@ -21,4 +21,7 @@ export default class ClassificadorContents {
 
   @Column({ nullable: true })
   url!: string
+
+  @Column({ nullable: true })
+  text!: string
 }

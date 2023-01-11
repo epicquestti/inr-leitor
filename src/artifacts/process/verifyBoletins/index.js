@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var app_1 = __importDefault(require("../../config/app"));
+var Entities_1 = require("../../Entities");
 var lib_1 = require("../../lib");
 var getConfigurations_1 = __importDefault(require("../getConfigurations"));
 var processBoletim_1 = __importDefault(require("./processBoletim"));
@@ -50,11 +51,12 @@ exports["default"] = {
     name: "verifyBoletins",
     processListener: false,
     handle: function (db, event, data, notifyAppUser) { return __awaiter(void 0, void 0, void 0, function () {
-        var lastPublishes, appConfig, versionProcessResult, beProcessResult, clProcessResult, error_1;
+        var lastPublishes, appConfig, versionProcessResult, beProcessResult, clProcessResult, notificacoesQueryBuilder, notificationList, notificationCount, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
+                    _a.trys.push([0, 13, , 14]);
+                    console.log(app_1["default"].api.inr.lastPublishes);
                     return [4 /*yield*/, (0, lib_1.GET)(app_1["default"].api.inr.lastPublishes)];
                 case 1:
                     lastPublishes = _a.sent();
@@ -87,12 +89,37 @@ exports["default"] = {
                 case 8:
                     _a.sent();
                     _a.label = 9;
-                case 9: return [3 /*break*/, 11];
+                case 9: return [4 /*yield*/, db
+                        .getRepository(Entities_1.Notificacoes)
+                        .createQueryBuilder("notificacoes")];
                 case 10:
+                    notificacoesQueryBuilder = _a.sent();
+                    return [4 /*yield*/, notificacoesQueryBuilder
+                            .orderBy("notificacoes.createdAt", "DESC")
+                            .take(10)
+                            .getMany()];
+                case 11:
+                    notificationList = _a.sent();
+                    return [4 /*yield*/, notificacoesQueryBuilder
+                            .where("notificacoes.readed = :readed", {
+                            readed: false
+                        })
+                            .getCount()];
+                case 12:
+                    notificationCount = _a.sent();
+                    data.window.webContents.send("reloadNotificationList", {
+                        success: true,
+                        data: {
+                            notificationList: notificationList,
+                            notificationCount: notificationCount
+                        }
+                    });
+                    return [3 /*break*/, 14];
+                case 13:
                     error_1 = _a.sent();
                     console.log(error_1.message);
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/];
+                    return [3 /*break*/, 14];
+                case 14: return [2 /*return*/];
             }
         });
     }); }
