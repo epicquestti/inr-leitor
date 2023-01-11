@@ -1,7 +1,7 @@
 {
   "name": "inr-app",
   "productName": "Leitor INR",
-  "version": "0.2.65",
+  "version": "0.2.72",
   "description": "Aplicativo Voltado para o cliente INR onde o mesmo pode acompanhar as publicações INR em tempo real.",
   "main": "src/artifacts/index.js",
   "scripts": {

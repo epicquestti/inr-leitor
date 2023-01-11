@@ -1,5 +1,5 @@
 Leitor INR
-Versão atual: 0.2.65
+Versão atual: 0.2.72
  
 Leitor INR é um aplicativo para distribuição livre e gratuita destinada a Assinantes INR.
 
@@ -19,4 +19,4 @@ O aplicativo Leitor INR é propriedade intelectual da Boletins Informativos Ltda,
  
 Em caso de dúvidas, favor enviar e-mail para faleconosco@inr.com.br.
 
-Publicações INR © 2022. Todos os direitos reservados.
+Publicações INR © 2023. Todos os direitos reservados.
