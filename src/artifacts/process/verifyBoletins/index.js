@@ -56,13 +56,13 @@ exports["default"] = {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 13, , 14]);
-                    console.log(app_1["default"].api.inr.lastPublishes);
                     return [4 /*yield*/, (0, lib_1.GET)(app_1["default"].api.inr.lastPublishes)];
                 case 1:
                     lastPublishes = _a.sent();
                     return [4 /*yield*/, getConfigurations_1["default"].handle(db)];
                 case 2:
                     appConfig = _a.sent();
+                    console.log(app_1["default"].api.inr.lastPublishes);
                     if (!(appConfig && lastPublishes)) return [3 /*break*/, 9];
                     return [4 /*yield*/, lib_1.versionTools.compareVersions(data.appVersion, lastPublishes.version)];
                 case 3:

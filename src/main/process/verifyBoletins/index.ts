@@ -19,10 +19,10 @@ export default {
     notifyAppUser?: boolean
   ): Promise<void> => {
     try {
-      console.log(app.api.inr.lastPublishes)
-
       const lastPublishes = await GET(app.api.inr.lastPublishes)
       const appConfig = await getConfigurations.handle(db)
+
+      console.log(app.api.inr.lastPublishes)
 
       if (appConfig && lastPublishes) {
         const versionProcessResult = await versionTools.compareVersions(

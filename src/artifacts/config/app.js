@@ -3,9 +3,10 @@ exports.__esModule = true;
 var electron_1 = require("electron");
 var isDev = !electron_1.app.isPackaged;
 // ? "https://homolog.publicacoesinr.com.br/api"
-var base = isDev
-    ? "http://localhost:3000/api"
-    : "https://production.publicacoesinr.com.br/api";
+var base = "https://production.publicacoesinr.com.br/api";
+// const base = isDev
+//   ? "http://localhost:3000/api"
+//   : "https://production.publicacoesinr.com.br/api"
 exports["default"] = {
     api: {
         inr: {

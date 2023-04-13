@@ -1,9 +1,10 @@
 import { app } from "electron"
 const isDev = !app.isPackaged
 // ? "https://homolog.publicacoesinr.com.br/api"
-const base = isDev
-  ? "http://localhost:3000/api"
-  : "https://production.publicacoesinr.com.br/api"
+const base = "https://production.publicacoesinr.com.br/api"
+// const base = isDev
+//   ? "http://localhost:3000/api"
+//   : "https://production.publicacoesinr.com.br/api"
 export default {
   api: {
     inr: {
